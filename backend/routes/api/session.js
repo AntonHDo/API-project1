@@ -27,7 +27,6 @@ router.post(
 
         if (!user) {
             const err = new Error('Login failed');
-            // err.statusCode = "401"
             err.message = "Invalid credentials"
             err.status = 401;
             err.title = 'Login failed';
