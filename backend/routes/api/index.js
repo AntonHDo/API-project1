@@ -9,13 +9,13 @@ const { requireAuth } = require('../../utils/auth.js')
 // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
-router.get('/test', requireAuth, (req, res) => {
-    res.json({ message: 'success' })
-})
 router.use('/session', sessionRouter);
 
 router.use('/users', usersRouter);
 
+router.get('/test', requireAuth, (req, res) => {
+    res.json({ message: 'success' })
+})
 // router.post('/test', (req, res) => {
 //     res.json({ requestBody: req.body });
 // });
