@@ -33,10 +33,17 @@ router.post(
             return next(err);
         }
 
-        await setTokenCookie(res, user);
-
+        const token = await setTokenCookie(res, user);
+        const returnUser = {
+            "id": user.id,
+            "firstName": user.firstname,
+            "lastName": user.lastname,
+            "email": user.email,
+            "username": user.username,
+            "token": token
+        }
         return res.json({
-            user: user
+            user: returnUser
         });
     }
 );
