@@ -11,7 +11,10 @@ const validateSignup = [
     check('email')
         .exists({ checkFalsy: true })
         .isEmail()
-        .withMessage('Please provide a valid email.'),
+        .withMessage('Invalid email'),
+    check('username')
+        .exists({ checkFalsy: true })
+        .withMessage('Username is required'),
     check('username')
         .exists({ checkFalsy: true })
         .isLength({ min: 4 })
@@ -24,6 +27,12 @@ const validateSignup = [
         .exists({ checkFalsy: true })
         .isLength({ min: 6 })
         .withMessage('Password must be 6 characters or more.'),
+    check('firstname')
+        .exists({ checkFalsy: true })
+        .withMessage('First Name is required'),
+    check('lastname')
+        .exists({ checkFalsy: true })
+        .withMessage('Last Name is required'),
     handleValidationErrors
 ];
 
@@ -36,10 +45,17 @@ router.post(
         const { email, password, username, firstname, lastname } = req.body;
         const user = await User.signup({ email, username, password, firstname, lastname });
 
-        await setTokenCookie(res, user);
-
+        const token = await setTokenCookie(res, user);
+        const returnUser = {
+            "id": user.id,
+            "firstName": user.firstname,
+            "lastName": user.lastname,
+            "email": user.email,
+            "username": user.username,
+            "token": token
+        }
         return res.json({
-            user: user
+            user: returnUser
         });
     }
 );
