@@ -19,7 +19,7 @@ const validateLogin = [
 // Log in
 router.post(
     '/',
-    requireAuth, validateLogin,
+    validateLogin,
     async (req, res, next) => {
         const { credential, password } = req.body;
 
@@ -74,6 +74,7 @@ router.get(
         } else return res.json({ user: null });
     }
 );
+
 
 
 
