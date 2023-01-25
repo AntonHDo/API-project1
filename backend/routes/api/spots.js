@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
         spotsArray.push(spotJSON)
     }
 
-    res.json(spotsArray)
+    res.json({ Spots: spotsArray })
 })
 
 // post a spot
@@ -62,11 +62,15 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 })
 
 
-// //get spot of current user
-// router.get('/current', requireAuth, (req, res) => {
-//     const spot = await Spot.findAll({
-//         where{}
-//     })
-// })
+//get spot of current user
+router.get('/current', requireAuth, async (req, res) => {
+    const userSpots = await Spot.findAll({
+        where: {
+            ownerId: req.user.id
+        }
+    })
+
+    res.status(200).json(userSpots)
+})
 
 module.exports = router;

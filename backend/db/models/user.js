@@ -53,7 +53,6 @@ module.exports = (sequelize, DataTypes) => {
         models.Spot,
         { through: models.Review }
       )
-
       User.hasMany(
         models.Spot,
         { foreignKey: 'ownerId' }
