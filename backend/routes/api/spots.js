@@ -7,7 +7,7 @@ const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
 
-//tester to see if migration worked
+//get spot
 router.get('/', async (req, res) => {
     const spots = await Spot.findAll()
     let spotsArray = []
@@ -76,6 +76,7 @@ router.get('/current', requireAuth, async (req, res) => {
     res.status(200).json(userSpots)
 })
 
+
 //Details of a Spot from an id
 
 router.get('/:spotId', async (req, res) => {
@@ -132,55 +133,78 @@ router.get('/:spotId', async (req, res) => {
 
 router.put('/:spotId', async (req, res) => {
 
-
-    const spotId = await Spot.findByPk(req.params.spotId)
-    if (!spotId) return
+    const spotId = await Spot.findByPk(req.params.spotId,
+        {
+            attributes: {
+                exclude: ['avgRating', 'previewImage']
+            }
+        }
+    )
+    if (!spotId) {
+        res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
 
     const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body
 
-    spotId.set({
-        address: req.body.address
-    })
-    await spotId.save()
-    // const newSpotId = {
-    //     address,
-    //     city,
-    //     state,
-    //     country,
-    //     lat,
-    //     lng,
-    //     name,
-    //     description,
-    //     price,
-    //     createdAt,
-    //     updatedAt
-    // }
-    // const spots = await Spot.findAll()
-    const updatedSpotId = await Spot.findByPk(req.params.spotId)
+    const editErr = {
+        message: "Validation Error",
+        statusCode: 400,
+        errors: {}
+    }
+
+    // if (!address) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
+    // if (!) editErr.errors.address = "Street address is required"
 
 
-    console.log(updatedSpotId)
-    res.json(updatedSpotId)
+    const newSpotId = {
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+        createdAt,
+        updatedAt
+    }
+
+    await spotId.update(newSpotId)
+
+    // await spotId.save()
+
+    res.json(spotId)
 })
 
 
 router.delete('/:spotId', requireAuth, async (req, res) => {
     const spotId = await Spot.findByPk(req.params.spotId)
-    // await Spot.destroy({
-    //     where: {
-    //         id: req.params.spotId
-    //     }
-    // })
-
-    // if (!spotId) res.json({
-    //     "message": "Spot couldn't be found",
-    //     "statusCode": 404
-    // })
-    spotId.destroy()
+    if (!spotId) {
+        res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
+    await spotId.destroy()
     res.json({
         "message": "Successfully deleted",
         "statusCode": 200
     })
 })
+
+
+
 
 module.exports = router;
