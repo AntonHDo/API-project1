@@ -87,7 +87,6 @@ router.get('/:spotId', async (req, res) => {
     const spots = await Spot.findAll()
 
     const owner = await User.findAll()
-    console.log("owner!!!!!!!!!!!:", owner[0].username)
 
     const spotImages = await SpotImage.findAll({
         where: {
@@ -128,6 +127,67 @@ router.get('/:spotId', async (req, res) => {
     }
 
     res.json(returnSpotId)
+})
+
+
+router.put('/:spotId', async (req, res) => {
+    // const spotId = await Spot.findOne({
+    //     where: { id: req.params.spotId },
+    //     attributes: {
+    //         exclude: [
+    //             'avgRating'
+    //         ]
+    //     }
+    // })
+
+    const spotId = await Spot.findByPk(req.params.spotId)
+    if (!spotId) return
+
+    const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body
+
+    spotId.set({
+        address: req.body.address
+    })
+    await spotId.save()
+    // const newSpotId = {
+    //     address,
+    //     city,
+    //     state,
+    //     country,
+    //     lat,
+    //     lng,
+    //     name,
+    //     description,
+    //     price,
+    //     createdAt,
+    //     updatedAt
+    // }
+    // const spots = await Spot.findAll()
+    const updatedSpotId = await Spot.findByPk(req.params.spotId)
+
+
+    console.log(updatedSpotId)
+    res.json(updatedSpotId)
+})
+
+
+router.delete('/:spotId', requireAuth, async (req, res) => {
+    const spotId = await Spot.findByPk(req.params.spotId)
+    // await Spot.destroy({
+    //     where: {
+    //         id: req.params.spotId
+    //     }
+    // })
+
+    // if (!spotId) res.json({
+    //     "message": "Spot couldn't be found",
+    //     "statusCode": 404
+    // })
+    spotId.destroy()
+    res.json({
+        "message": "Successfully deleted",
+        "statusCode": 200
+    })
 })
 
 module.exports = router;
