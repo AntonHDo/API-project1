@@ -131,14 +131,7 @@ router.get('/:spotId', async (req, res) => {
 
 
 router.put('/:spotId', async (req, res) => {
-    // const spotId = await Spot.findOne({
-    //     where: { id: req.params.spotId },
-    //     attributes: {
-    //         exclude: [
-    //             'avgRating'
-    //         ]
-    //     }
-    // })
+
 
     const spotId = await Spot.findByPk(req.params.spotId)
     if (!spotId) return

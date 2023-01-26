@@ -21,15 +21,24 @@ module.exports = (sequelize, DataTypes) => {
         models.User,
         { foreignKey: 'ownerId' }
       )
-
       Spot.hasMany(
         models.SpotImage,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE'
+        }
+      )
+      Spot.hasMany(
+        models.Review,
         { foreignKey: 'spotId' }
       )
     }
   }
   Spot.init({
-    ownerId: DataTypes.INTEGER,
+    ownerId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'Users' }
+    },
     address: DataTypes.STRING,
     city: DataTypes.STRING,
     state: DataTypes.STRING,
