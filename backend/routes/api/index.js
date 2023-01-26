@@ -24,9 +24,9 @@ router.use('/reviews', reviewsRouter)
 
 router.use('/bookings', bookingsRouter)
 
-router.use('/reviewImages', reviewImagesRouter)
+router.use('/review-images', reviewImagesRouter)
 
-router.use('/spotImages', spotImagesRouter)
+router.use('/spot-Images', spotImagesRouter)
 
 router.get('/test', requireAuth, (req, res) => {
     res.json({ message: 'success' })

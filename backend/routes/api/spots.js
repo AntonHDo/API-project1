@@ -1,10 +1,8 @@
 const express = require('express')
-
-const { Spot, SpotImage, Review, User } = require('../../db/models');
+const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 const Sequelize = require('sequelize')
-
 const { requireAuth } = require('../../utils/auth');
-
+const { Model } = require('sequelize');
 const router = express.Router();
 
 //get spot
@@ -32,9 +30,9 @@ router.get('/', async (req, res) => {
 router.post('/', requireAuth, async (req, res) => {
     // Your code here
     const { address, city, state, country, lat, lng, name, description, price } = req.body
-    const owner = await Spot.findByPk(req.params.ownerId)
+    const owner = await User.findAll()
     const spot = await Spot.create({
-        ownerId: owner,
+        ownerId: owner[0].id,
         address,
         city,
         state,
@@ -50,7 +48,7 @@ router.post('/', requireAuth, async (req, res) => {
 })
 
 
-//(One-to-Many)
+//post a spotimage on spots based on spotId
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     // Your code here
     const spot = await Spot.findByPk(req.params.spotId)
@@ -149,23 +147,22 @@ router.put('/:spotId', async (req, res) => {
 
     const { address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = req.body
 
-    const editErr = {
+    const spotEditErr = {
         message: "Validation Error",
         statusCode: 400,
         errors: {}
     }
 
-    // if (!address) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-    // if (!) editErr.errors.address = "Street address is required"
-
+    if (!address) spotEditErr.errors.address = "Street address is required"
+    if (!city) spotEditErr.errors.city = "Street address is required"
+    if (!state) spotEditErr.errors.state = "City is required"
+    if (!country) spotEditErr.errors.country = "Country is required"
+    if (!lat) spotEditErr.errors.lat = "Latitude is not valid"
+    if (!lng) spotEditErr.errors.lng = "Longitude is not valid"
+    if (!name) spotEditErr.errors.name = "Name must be less than 50 characters"
+    if (!description) spotEditErr.errors.description = "Description is required"
+    if (!price) spotEditErr.errors.price = "Price per day is required"
+    res.json(spotEditErr)
 
     const newSpotId = {
         address,
@@ -183,9 +180,76 @@ router.put('/:spotId', async (req, res) => {
 
     await spotId.update(newSpotId)
 
-    // await spotId.save()
-
     res.json(spotId)
+})
+
+//post a review on spots by spotId
+router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
+    // Your code here
+    const spots = await Spot.findByPk(req.params.spotId)
+    if (!spots) {
+        res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
+
+    const { review, stars } = req.body
+    const reviewErr = {
+        message: "Validation Error",
+        statusCode: 400,
+        errors: {}
+    }
+    if (!review) reviewErr.errors.review = "Review text is required"
+    if (!stars) reviewErr.errors.stars = "Stars must be an integer from 1 to 5"
+    res.status(404).json(reviewErr)
+
+    const reviews = await Review.create({
+        userId: spots.ownerId,
+        spotId: spots.id,
+        review,
+        stars,
+        createdAt: spots.createdAt,
+        updatedAt: spots.updatedAt
+    })
+
+    res.json(reviews)
+})
+
+
+router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
+    const spotId = await Spot.findByPk(req.params.spotId, {
+        attributes: {
+            exclude: ['description', 'avgRating', 'createdAt', 'updatedAt']
+        }
+    })
+    const allReviews = await Review.findAll()
+    const allReviewImages = await ReviewImage.findAll({
+        attributes: {
+            exclude: ['reviewId', 'createdAt', 'updatedAt']
+        }
+    })
+    const userName = await User.findAll({
+        attributes: ['id', 'firstname', 'lastname'],
+        where: {
+            id: req.user.id
+        }
+    })
+
+    const returnReviews = {
+        "id": allReviews[0].id,
+        "userId": req.user.id,
+        "spotId": spotId.id,
+        "review": allReviews[0].review,
+        "stars": allReviews[0].stars,
+        "createdAt": allReviews[0].createdAt,
+        "updatedAt": allReviews[0].updatedAt,
+        "User": userName[0],
+        "Spot": spotId,
+        "ReviewImages": allReviewImages
+    }
+
+    res.json({ "Reviews": [returnReviews] })
 })
 
 
