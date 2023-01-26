@@ -1,9 +1,10 @@
 const express = require('express')
 
-const { Spot, SpotImage, Review } = require('../../db/models');
+const { Spot, SpotImage, Review, User } = require('../../db/models');
 const Sequelize = require('sequelize')
 
 const { requireAuth } = require('../../utils/auth');
+
 const router = express.Router();
 
 //tester to see if migration worked
@@ -18,11 +19,14 @@ router.get('/', async (req, res) => {
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
         spotJSON.avgRating = reviews[0].toJSON().avgRating
+
         spotsArray.push(spotJSON)
     }
 
     res.json({ Spots: spotsArray })
 })
+
+
 
 // post a spot
 router.post('/', requireAuth, async (req, res) => {
@@ -69,8 +73,61 @@ router.get('/current', requireAuth, async (req, res) => {
             ownerId: req.user.id
         }
     })
-
     res.status(200).json(userSpots)
+})
+
+//Details of a Spot from an id
+
+router.get('/:spotId', async (req, res) => {
+
+    const numberReviews = await Review.count('id')
+
+    const spotId = await Spot.findByPk(req.params.spotId)
+
+    const spots = await Spot.findAll()
+
+    const owner = await User.findAll()
+    console.log("owner!!!!!!!!!!!:", owner[0].username)
+
+    const spotImages = await SpotImage.findAll({
+        where: {
+            spotId: req.params.spotId
+        }
+    })
+
+    let spotsArray = []
+    for (let spot of spots) {
+        const spotJSON = spot.toJSON()
+
+        let reviews = await Review.findAll({
+            where: { spotId: spotJSON.id },
+            attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
+        })
+        spotJSON.avgRating = reviews[0].toJSON().avgRating
+        spotsArray.push(spotJSON)
+    }
+
+    const returnSpotId = {
+        "id": spotId.id,
+        "ownerId": req.user.id,
+        "address": spotId.address,
+        "city": spotId.city,
+        "state": spotId.state,
+        "country": spotId.country,
+        "lat": spotId.lat,
+        "lng": spotId.lng,
+        "name": spotId.name,
+        "description": spotId.description,
+        "price": spotId.price,
+        "createdAt": spotId.createdAt,
+        "updatedAt": spotId.updatedAt,
+        "numReviews": numberReviews,
+        "avgStarRating": spotsArray[0].avgRating,
+        "spotImages": spotImages,
+        "Owner": { "id": owner[0].id, "firstname": owner[0].firstname, "lastname": owner[0].lastname }
+    }
+
+    res.json(returnSpotId)
 })
 
 module.exports = router;
