@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Review, ReviewImage, User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { Op, Sequelize } = require("sequelize");
 
 //get reviews from current user
 router.get('/current', async (req, res) => {
@@ -26,6 +27,27 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         })
     }
 
+    if (reviews.userId !== req.user.id) {
+        res.status(403).json({
+            message: "Authorization Required",
+        })
+    }
+
+    const imageId = await ReviewImage.findAll({
+        where: {
+            reviewId: req.params.reviewId
+        }
+    })
+
+    const reviewAdded = await ReviewImage.count('id')
+
+    if (reviewAdded > 10) {
+        res.status(403).json({
+            "message": "Maximum number of images for this resource was reached",
+            "statusCode": 403
+        })
+    }
+
     const { url } = req.body
 
     const image = await ReviewImage.create({
@@ -47,6 +69,30 @@ router.put('/:reviewId', async (req, res) => {
     }
 
     const { id, userId, spotId, review, stars, createdAt, updatedAt } = req.body
+
+    const reviewErr = {
+        message: "Validation Error",
+        statusCode: 400,
+        errors: {}
+    };
+
+    if (stars < 1 || stars > 5) {
+        res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "error": {
+                "stars": "Stars must be an integer from 1 to 5"
+            }
+        })
+    }
+
+    if (!review) reviewErr.errors.review = "Review text is required"
+    if (!stars) reviewErr.errors.stars = "Stars must be an integer from 1 to 5"
+
+    if (!stars || !review) {
+        res.statusCode = 400;
+        return res.json(reviewErr)
+    }
 
     const newReview = {
         id,
