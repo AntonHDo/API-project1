@@ -39,7 +39,11 @@ router.get('/current', requireAuth, async (req, res) => {
 // edit a booking
 router.put('/:bookingId', requireAuth, async (req, res) => {
 
-    const bookingId = await Booking.findByPk(req.params.bookingId)
+    const bookingId = await Booking.findByPk(req.params.bookingId, {
+        where: {
+            userId: req.user.id
+        }
+    })
 
     if (!bookingId) {
         res.status(404).json({
@@ -53,7 +57,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     const newBookings = {
         id,
         spotId,
-        userId,
+        userId: req.user.id,
         startDate,
         endDate,
         createdAt,
