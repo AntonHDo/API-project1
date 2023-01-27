@@ -2,7 +2,7 @@ const express = require('express')
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models');
 const Sequelize = require('sequelize')
 const { requireAuth } = require('../../utils/auth');
-const { Model } = require('sequelize');
+
 const router = express.Router();
 
 //get spot
@@ -238,7 +238,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     res.json(reviews)
 })
 
-
+// get a spots review
 router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
     const spotId = await Spot.findByPk(req.params.spotId, {
         attributes: {
@@ -274,7 +274,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
     res.json({ "Reviews": [returnReviews] })
 })
 
-
+// delete a spot
 router.delete('/:spotId', requireAuth, async (req, res) => {
     const spotId = await Spot.findByPk(req.params.spotId)
     if (!spotId) {
