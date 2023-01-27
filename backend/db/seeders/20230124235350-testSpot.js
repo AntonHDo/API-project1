@@ -26,7 +26,7 @@ module.exports = {
         previewImage: "image url"
       },
       {
-        ownerId: 1,
+        ownerId: 2,
         address: "3043 Pokemon Lane",
         city: "Santa Cruz",
         state: "Virgina",
@@ -42,7 +42,7 @@ module.exports = {
         previewImage: "image url"
       },
       {
-        ownerId: 1,
+        ownerId: 3,
         address: "351 McDonalds Road",
         city: "San Bruno",
         state: "New York",

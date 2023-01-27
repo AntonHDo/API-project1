@@ -6,28 +6,66 @@ const Sequelize = require('sequelize')
 
 
 //gets all bookings of a current user
-router.get('/current', async (req, res) => {
-    const booking = await Booking.findAll()
+router.get('/current', requireAuth, async (req, res) => {
+    const booking = await Booking.findAll({
+        where: { userId: req.user.id }
+    })
     const spot = await Spot.findAll({
+        where: {
+            ownerId: req.user.id
+        },
         attributes: {
-            exclude: ['avgRating', 'createdAt', 'updatedAt']
+            exclude: ['avgRating', 'createdAt', 'updatedAt', 'description']
         }
     })
-    const user = await User.findAll()
+    // const user = await User.findAll()
 
     const currentUsersBooking = {
         "id": booking[0].id,
         "spotId": booking[0].spotId,
         "Spot": spot[0],
-        "userId": req.user.id,
+        "userId": booking[0].userId,
         "startDate": booking[0].startDate,
         "endDate": booking[0].endDate,
-        "createdAt": "2021-11-19 20:39:36",
-        "updatedAt": "2021-11-19 20:39:36"
+        "createdAt": booking[0].createdAt,
+        "updatedAt": booking[0].updatedAt
     }
 
     res.json({ "Booking": [currentUsersBooking] })
 })
+
+
+
+// edit a booking
+router.put('/:bookingId', requireAuth, async (req, res) => {
+
+    const bookingId = await Booking.findByPk(req.params.bookingId)
+
+    if (!bookingId) {
+        res.status(404).json({
+            "message": "Booking Couldn't be found",
+            "statusCode": 404
+        })
+    }
+
+    const { id, spotId, userId, startDate, endDate, createdAt, updatedAt } = req.body
+
+    const newBookings = {
+        id,
+        spotId,
+        userId,
+        startDate,
+        endDate,
+        createdAt,
+        updatedAt
+    }
+
+    await bookingId.update(newBookings)
+
+    res.json(bookingId)
+})
+
+
 
 
 // deletes a booking
