@@ -10,7 +10,6 @@ router.get('/current', async (req, res) => {
             userId: req.user.id
         }
     })
-    console.log(review)
     res.status(200).json(review)
 })
 

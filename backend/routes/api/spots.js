@@ -7,7 +7,8 @@ const router = express.Router();
 
 //get spot
 router.get('/', async (req, res) => {
-    const spots = await Spot.findAll()
+    const spots = await Spot.findAll({
+    })
     let spotsArray = []
     for (let spot of spots) {
         const spotJSON = spot.toJSON()
@@ -20,6 +21,8 @@ router.get('/', async (req, res) => {
 
         spotsArray.push(spotJSON)
     }
+
+
 
     res.json({ Spots: spotsArray })
 })
@@ -71,6 +74,25 @@ router.get('/current', requireAuth, async (req, res) => {
             ownerId: req.user.id
         }
     })
+
+    // const allSpot = {
+    //     "id": 1,
+    //     "ownerId": 1,
+    //     "address": "123 Disney Lane",
+    //     "city": "San Francisco",
+    //     "state": "California",
+    //     "country": "United States of America",
+    //     "lat": 37.7645358,
+    //     "lng": -122.4730327,
+    //     "name": "App Academy",
+    //     "description": "Place where web developers are created",
+    //     "price": 123,
+    //     "createdAt":
+    //         "updatedAt":
+    //     "avgRating":
+    //         "previewImage": "image url"
+    // }
+
     res.status(200).json(userSpots)
 })
 
