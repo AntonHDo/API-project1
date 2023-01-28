@@ -8,7 +8,41 @@ const router = express.Router();
 
 //get spot
 router.get('/', requireAuth, async (req, res) => {
-    const spots = await Spot.findAll()
+    let { page, size } = req.query
+    let pagination = {}
+    page = parseInt(page)
+    size = parseInt(size)
+
+    const pageSizeErr = {
+        "message": "Validation Error",
+        "statusCode": 400,
+        "errors": {}
+    }
+
+    if (page <= 0) pageSizeErr.errors.page = "Page must be greater than or equal to 1"
+    if (size <= 0) pageSizeErr.errors.size = "Size must be greater than or equal to 1"
+
+
+    if (isNaN(page) || page < 1) page = 0
+    if (isNaN(size) || size < 1) size = 0
+
+
+    if (page >= 1 && size >= 1) {
+        if (size >= 20) {
+            pagination.limit = 20
+        } else {
+            pagination.limit = size
+            pagination.offset = size * (page - 1)
+        }
+    }
+
+    if (page <= 0 || size <= 0) {
+        res.status(400).json(pageSizeErr)
+    }
+
+    const spots = await Spot.findAll({
+        ...pagination
+    })
     let spotsArray = []
     for (let spot of spots) {
         const spotJSON = spot.toJSON()
@@ -23,8 +57,7 @@ router.get('/', requireAuth, async (req, res) => {
     }
 
 
-
-    res.json({ Spots: spotsArray })
+    res.json({ Spots: spotsArray, page, size })
 })
 
 
@@ -120,7 +153,7 @@ router.get('/current', requireAuth, async (req, res) => {
     const userSpots = await Spot.findAll({
         where: {
             ownerId: req.user.id
-        }
+        },
     })
     let spotsArray = []
     for (let spot of userSpots) {
@@ -153,7 +186,27 @@ router.get('/current', requireAuth, async (req, res) => {
         "previewImage": userSpots[0].previewImage
     }
 
-    res.status(200).json({ Spots: [allSpot] })
+    // let { page, size } = req.query
+    // let pagination = {}
+    // page = parseInt(page)
+    // size = parseInt(size)
+
+    // if (isNaN(page) || page < 1) page = 1
+    // if (isNaN(size) || size < 1) size = 1
+
+    // if (page >= 1 && size >= 1) {
+    //     if (size >= 20) {
+    //         pagination.limit = 20
+    //     } else {
+    //         pagination.limit = size
+    //         pagination.offset = size * (page - 1)
+    //     }
+    // }
+
+
+    res.status(200).json({
+        Spots: [allSpot]
+    })
 })
 
 

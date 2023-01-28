@@ -1458,7 +1458,7 @@ Return spots filtered by query parameters.
       "size": 25
     }
     ```
-
+Test error with /spots?page=1&size=0
 * Error Response: Query parameter validation errors
   * Status Code: 400
   * Headers:
