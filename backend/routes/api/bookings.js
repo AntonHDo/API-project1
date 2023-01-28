@@ -11,7 +11,7 @@ router.get('/current', requireAuth, async (req, res) => {
     })
     const spot = await Spot.findAll({
         where: {
-            ownerId: req.user.id
+            id: booking[0].spotId
         },
         attributes: {
             exclude: ['avgRating', 'createdAt', 'updatedAt', 'description']
@@ -133,6 +133,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
+
     let now = new Date()
 
     if (new Date(bookingId.startDate) <= now) {
@@ -144,7 +145,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
 
     let spotId = await Spot.findByPk(req.user.id.spotId);
 
-    if (req.user.id !== bookingId.userId && spotId.ownerId !== req.user.id) {
+    if (req.user.id !== bookingId.userId || spotId.ownerId !== req.user.id) {
         res.status(403).json({
             message: "Forbidden",
             statusCode: 403

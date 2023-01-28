@@ -29,7 +29,8 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
     if (reviews.userId !== req.user.id) {
         res.status(403).json({
-            message: "Authorization Required",
+            message: "Forbidden",
+            statusCode: 403
         })
     }
 
@@ -65,6 +66,13 @@ router.put('/:reviewId', async (req, res) => {
         res.status(404).json({
             "message": "Review couldn't be found",
             "statusCode": 404
+        })
+    }
+
+    if (reviewId.userId !== req.user.id) {
+        res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
         })
     }
 
@@ -119,6 +127,14 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
             "statusCode": 404
         })
     }
+
+    if (reviewId.userId !== req.user.id) {
+        res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+
     await reviewId.destroy()
     res.json({
         "message": "Successfully deleted",

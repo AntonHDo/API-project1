@@ -1,7 +1,7 @@
 const express = require('express');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
-const { SpotImage } = require('../../db/models');
+const { SpotImage, Spot, User } = require('../../db/models');
 
 
 // get all spotimages
@@ -21,6 +21,17 @@ router.delete('/:spotImageId', requireAuth, async (req, res) => {
             "statusCode": 404
         })
     }
+
+    let spotId = await Spot.findByPk(req.user.id.spotId
+    )
+    console.log("dsfsadddddssssssssssssssssssssdfsd", spotId)
+    if (req.user.id !== spotImageId.id) {
+        res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+
     await spotImageId.destroy()
     res.json({
         "message": "Successfully deleted",
