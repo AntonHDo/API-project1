@@ -20,6 +20,12 @@ const handleValidationErrors = (req, _res, next) => {
     next();
 };
 
+const convertDate = (date) => {
+    const splitDate = date.split('-')
+    const miliSec = new Date(splitDate[0], splitDate[1], splitDate[2]).getTime()
+    return miliSec
+}
+
 module.exports = {
-    handleValidationErrors
+    handleValidationErrors, convertDate
 };

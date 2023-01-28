@@ -7,6 +7,7 @@ const { SpotImage } = require('../../db/models');
 // get all spotimages
 router.get('/', async (req, res) => {
     const spotImage = await SpotImage.findAll()
+
     res.json(spotImage)
 })
 
@@ -16,7 +17,7 @@ router.delete('/:spotImageId', requireAuth, async (req, res) => {
     const spotImageId = await SpotImage.findByPk(req.params.spotImageId)
     if (!spotImageId) {
         res.status(404).json({
-            "message": "Spot couldn't be found",
+            "message": "Spot Image couldn't be found",
             "statusCode": 404
         })
     }
