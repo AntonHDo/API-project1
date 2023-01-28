@@ -2,7 +2,7 @@ const express = require('express')
 const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 const Sequelize = require('sequelize')
 const { requireAuth } = require('../../utils/auth');
-
+const { convertDate } = require('../../utils/validation')
 
 const router = express.Router();
 
@@ -97,18 +97,21 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     }
 
     const { url, preview, updatedAt, createdAt } = req.body
-    const images = await SpotImage.findAll({
+
+
+    let newImage = await SpotImage.create({
+        url,
+        preview,
+        spotId: req.params.spotId
+    })
+
+    await SpotImage.findAll({
         where: {
-            spotId: spot.id
+            spotId: req.params.spotId
         }
     })
 
-    const image = await SpotImage.create({
-        url,
-        preview
-    })
-
-    res.json(image)
+    res.json(newImage)
 })
 
 
@@ -364,8 +367,8 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
     if (!spotId) {
         return res.status(404).json({
-            message: "Spot couldn't be found",
-            statusCode: 404,
+            "message": "Spot couldn't be found",
+            "statusCode": 404,
         });
     }
 
@@ -468,8 +471,12 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         "statusCode": 400,
         "errors": {}
     }
-    console.log(startDate)
-    if (startDate >= endDate) {
+
+
+    const startMiliSec = convertDate(startDate)
+    const endMiliSec = convertDate(endDate)
+
+    if (startMiliSec > endMiliSec) {
         res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
@@ -479,18 +486,31 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         })
     }
 
-    // if (!startDate) bookingErr.errors.startDate
-
-
     const allBookings = await Booking.findAll({
         where: {
-            userId: req.user.id
+            spotId: spotId.id
         }
     })
 
+    for (let booking of allBookings) {
+        const bookingStartMiliSec = convertDate(booking.startDate)
+        const bookingEndMiliSec = convertDate(booking.endDate)
+        if (bookingStartMiliSec === startMiliSec || bookingEndMiliSec === endMiliSec) {
+            res.status(403).json({
+                "message": "Sorry, this spot is already booked for the specified dates",
+                "statusCode": 403,
+                "error": {
+                    "startDate": "Start date conflicts with an existing booking",
+                    "endDate": "End date conflicts with an existing booking"
+                }
+            })
+        }
+    }
+
+
     const postBooking = await Booking.create({
         spotId: spotId.id,
-        userId: allBookings[0].userId,
+        userId: req.user.id,
         startDate,
         endDate,
         createdAt: allBookings[0].createdAt,
