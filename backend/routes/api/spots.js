@@ -263,7 +263,8 @@ router.get('/:spotId', requireAuth, async (req, res) => {
             "statusCode": 404
         })
     }
-    const numberReviews = await Review.count('id')
+
+    const numberReviews = await Review.count('spotId')
 
 
     const spots = await Spot.findAll({
@@ -642,7 +643,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const postBooking = await Booking.create({
         spotId: spotId.id,
-        userId: spotId.ownerId,
+        userId: res.user.id,
         startDate,
         endDate,
         createdAt,
@@ -658,7 +659,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 router.delete('/:spotId', requireAuth, async (req, res) => {
     const spotId = await Spot.findByPk(req.params.spotId)
     if (!spotId) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Spot couldn't be found",
             "statusCode": 404
         })
@@ -666,7 +667,7 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
 
 
     if (req.user.id !== spotId.ownerId) {
-        res.status(403).json({
+        return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
         })

@@ -16,9 +16,6 @@ router.get('/', async (req, res) => {
 router.delete('/:spotImageId', requireAuth, async (req, res) => {
     const spotImageId = await SpotImage.findByPk(req.params.spotImageId)
 
-    const spots = await Spot.findAll({
-        where: { ownerId: req.user.id }
-    })
 
     if (!spotImageId) {
         return res.status(404).json({
@@ -26,7 +23,12 @@ router.delete('/:spotImageId', requireAuth, async (req, res) => {
             "statusCode": 404
         });
     }
-    if (req.user.id !== spots[0].ownerId) {
+
+    const spots = await Spot.findOne({
+        where: { id: spotImageId.spotId }
+    })
+
+    if (req.user.id !== spots.ownerId) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
