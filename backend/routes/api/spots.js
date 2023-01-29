@@ -6,26 +6,6 @@ const { convertDate } = require('../../utils/validation')
 
 const router = express.Router();
 
-//get spot
-// router.get('/', requireAuth, async (req, res) => {
-//     const spots = await Spot.findAll({
-//     })
-//     let spotsArray = []
-//     for (let spot of spots) {
-//         const spotJSON = spot.toJSON()
-
-//         let reviews = await Review.findAll({
-//             where: { spotId: spotJSON.id },
-//             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
-//         })
-//         spotJSON.avgRating = reviews[0].toJSON().avgRating
-
-//         spotsArray.push(spotJSON)
-//     }
-
-//     return res.json({ Spots: spotsArray })
-
-// })
 
 //Add Query Filters
 router.get('/', requireAuth, async (req, res) => {
@@ -67,9 +47,18 @@ router.get('/', requireAuth, async (req, res) => {
             where: { spotId: spotJSON.id },
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
+        let spotImage = await SpotImage.findAll({
+            attributes: ['url'],
+            where: { spotId: spotJSON.id }
+        })
+
         spotJSON.avgRating = reviews[0].toJSON().avgRating
 
+        spotJSON.previewImage = spotImage[0]
+
+
         spotsArray.push(spotJSON)
+
     }
 
     if (page === 0 || size === 0) {
@@ -178,53 +167,54 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
 
 //get spot of current user
 router.get('/current', requireAuth, async (req, res) => {
-    const userSpots = await Spot.findAll({
-        where: {
-            ownerId: req.user.id
-        },
+    // const userSpots = await Spot.findAll({
+    //     where: {
+    //         ownerId: req.user.id
+    //     },
+    // })
+
+    // let spotsArray = []
+    // for (let spot of userSpots) {
+    //     const spotJSON = spot.toJSON()
+
+    //     let reviews = await Review.findAll({
+    //         where: { spotId: spotJSON.id },
+    //         attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
+    //     })
+
+    //     let spotImage = await SpotImage.findAll({
+    //         attributes: ['url'],
+    //         where: { spotId: spotJSON.id }
+    //     })
+    //     spotJSON.previewImage = spotImage[0].url
+    //     spotJSON.avgRating = reviews[0].toJSON().avgRating
+
+    //     spotsArray.push(spotJSON)
+    // }
+    const allSpotsFromCurrUser = await Spot.findAll({
+        where: { ownerId: req.user.id }
     })
 
-    let spotsArray = []
-    for (let spot of userSpots) {
+    let currentUsersSpotsArray = []
+    for (let spot of allSpotsFromCurrUser) {
         const spotJSON = spot.toJSON()
-
-        let reviews = await Review.findAll({
+        let currentUsersReviews = await Review.findAll({
             where: { spotId: spotJSON.id },
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
-
-        let spotImage = await SpotImage.findAll({
+        let currentusersSpotImage = await SpotImage.findAll({
             attributes: ['url'],
-            where: { spotId: spotJSON.previewImage }
+            where: { spotId: spotJSON.id }
         })
-        console.log(spotImage)
-        spotJSON.previewImage = spotImage[0].url
-        spotJSON.avgRating = reviews[0].toJSON().avgRating
+        // console.log(spotImage)
+        spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating
+        spotJSON.previewImage = currentusersSpotImage[0]
 
-        spotsArray.push(spotJSON)
+        currentUsersSpotsArray.push(spotJSON)
     }
 
-    // const allSpot = {
-    //     "id": userSpots[0].id,
-    //     "ownerId": userSpots[0].ownerId,
-    //     "address": userSpots[0].address,
-    //     "city": userSpots[0].city,
-    //     "state": userSpots[0].state,
-    //     "country": userSpots[0].country,
-    //     "lat": userSpots[0].lat,
-    //     "lng": userSpots[0].lng,
-    //     "name": userSpots[0].name,
-    //     "description": userSpots[0].description,
-    //     "price": userSpots[0].price,
-    //     "createdAt": userSpots[0].createdAt,
-    //     "updatedAt": userSpots[0].updatedAt,
-    //     "avgRating": spotsArray[0].avgRating,
-    //     "previewImage": userSpots[0].previewImage
-    // }
-
-
     res.status(200).json({
-        Spots: spotsArray
+        Spots: currentUsersSpotsArray
     })
 })
 
