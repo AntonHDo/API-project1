@@ -50,7 +50,7 @@ router.get('/current', async (req, res) => {
     }
 
 
-    res.status(200).json(previewArr)
+    return res.status(200).json({ "Reviews": previewArr })
 })
 
 
@@ -62,21 +62,21 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     })
 
     if (!reviews) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Review couldn't be found",
             "statusCode": 404
         })
     }
 
     if (reviews.userId !== req.user.id) {
-        res.status(403).json({
+        return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
         })
     }
 
     if (reviews.ReviewImages.length >= 10) {
-        res.status(403).json({
+        return res.status(403).json({
             "message": "Maximum number of images for this resource was reached",
             "statusCode": 403
         })
@@ -88,7 +88,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         reviewId: req.params.reviewId,
         url
     })
-    res.json({
+    return res.json({
         id: image.id,
         url: image.url
     })
@@ -100,14 +100,14 @@ router.put('/:reviewId', async (req, res) => {
     const reviewId = await Review.findByPk(req.params.reviewId)
 
     if (!reviewId) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Review couldn't be found",
             "statusCode": 404
         })
     }
 
     if (reviewId.userId !== req.user.id) {
-        res.status(403).json({
+        return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
         })
@@ -122,7 +122,7 @@ router.put('/:reviewId', async (req, res) => {
     };
 
     if (stars < 1 || stars > 5) {
-        res.status(400).json({
+        return res.status(400).json({
             "message": "Validation Error",
             "statusCode": 400,
             "error": {
@@ -151,7 +151,7 @@ router.put('/:reviewId', async (req, res) => {
 
     await reviewId.update(newReview)
 
-    res.json(reviewId)
+    return res.json(reviewId)
 })
 
 
@@ -173,7 +173,7 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
     }
 
     await reviewId.destroy()
-    res.json({
+    return res.json({
         "message": "Successfully deleted",
         "statusCode": 200
     })

@@ -6,7 +6,7 @@ const { requireAuth } = require('../../utils/auth');
 
 router.get('/', async (req, res) => {
     const reviewImage = await ReviewImage.findAll()
-    res.json(reviewImage)
+    return res.json(reviewImage)
 })
 
 
@@ -31,7 +31,7 @@ router.delete('/:reviewImageId', requireAuth, async (req, res) => {
     }
 
     await reviewImageId.destroy()
-    res.json({
+    return res.json({
         "message": "Successfully deleted",
         "statusCode": 200
     })

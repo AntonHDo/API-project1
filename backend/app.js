@@ -61,7 +61,7 @@ app.use((err, _req, _res, next) => {
         err.errors = err.errors.map((e) => e.message);
         err.title = 'Validation error';
         err.status = 403
-        err.message = "User already exists"
+        err.message = "Validation error"
     }
     next(err);
 });

@@ -38,67 +38,110 @@ router.get('/current', requireAuth, async (req, res) => {
     }
 
 
-    res.json(previewArr)
+    return res.json({ "Bookings": previewArr })
 })
 
 
 
 // edit a booking
-router.put('/:bookingId', requireAuth, async (req, res) => {
+router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     const bookingId = await Booking.findByPk(req.params.bookingId)
 
     if (!bookingId) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Booking Couldn't be found",
             "statusCode": 404
         })
     }
 
-    if (bookingId.userId !== req.user.id) {
-        res.status(403).json({
-            message: "Forbidden",
-            statusCode: 403,
-        })
-    }
-
-
 
     const { id, startDate, endDate, createdAt, updatedAt } = req.body
 
-    const startMiliSec = convertDate(startDate)
-    const endMiliSec = convertDate(endDate)
-
-    if (startMiliSec > endMiliSec) {
-        res.status(400).json({
-            "message": "Validation Error",
+    if (startDate > endDate) {
+        res.status(400);
+        return res.json({
+            "message": "Validation error",
             "statusCode": 400,
-            "error": {
-                "endDate": "endDate cannot be on or before startDate"
+            "errors": {
+                "endDate": "endDate cannot come before startDate"
             }
         })
     }
 
-    const bookingStartMiliSec = convertDate(bookingId.startDate)
-    const bookingEndMiliSec = convertDate(bookingId.endDate)
-    if (bookingStartMiliSec === startMiliSec || bookingEndMiliSec === endMiliSec) {
-        res.status(403).json({
-            "message": "Sorry, this spot is already booked for the specified dates",
-            "statusCode": 403,
-            "error": {
-                "startDate": "Start date conflicts with an existing booking",
-                "endDate": "End date conflicts with an existing booking"
-            }
-        })
-    }
-
-    if (bookingStartMiliSec >= bookingEndMiliSec) {
-        res.status(403).json({
+    let now = new Date();
+    if (new Date(startDate) < now || new Date(endDate) < now) {
+        return res.status(403).json({
             "message": "Past bookings can't be modified",
             "statusCode": 403
         })
     }
 
+    let allBookingDatesForSpot = await Booking.findAll({
+        where: {
+            spotId: bookingId.spotId
+        }
+    })
+
+    let bookingErr = new Error("Sorry, this spot is already booked for the specified dates")
+    bookingErr.status = 403
+    bookingErr.title = "Booking Conflict"
+    for (let booking of allBookingDatesForSpot) {
+        if (endDate <= booking.endDate && endDate > booking.startDate) {
+            { bookingErr.errors = "End date conflicts with an existing booking" }
+        }
+        if (startDate >= booking.startDate && startDate < booking.endDate) {
+            {
+                bookingErr.errors = "Start date conflicts with an existing booking"
+            }
+        }
+        if (booking.startDate > startDate && booking.endDate < endDate) {
+            { bookingErr.errors = "Start date conflicts with an existing booking", "End date conflicts with an existing booking" }
+        }
+
+    }
+    if (bookingErr.errors) {
+        return next(bookingErr)
+    }
+
+    // const startMiliSec = convertDate(startDate)
+    // const endMiliSec = convertDate(endDate)
+
+    // if (startMiliSec > endMiliSec) {
+    //     return res.status(400).json({
+    //         "message": "Validation Error",
+    //         "statusCode": 400,
+    //         "error": {
+    //             "endDate": "endDate cannot be on or before startDate"
+    //         }
+    //     })
+    // }
+
+    // const bookingStartMiliSec = convertDate(bookingId.startDate)
+    // const bookingEndMiliSec = convertDate(bookingId.endDate)
+    // if (bookingStartMiliSec === startMiliSec || bookingEndMiliSec === endMiliSec) {
+    //     return res.status(403).json({
+    //         "message": "Sorry, this spot is already booked for the specified dates",
+    //         "statusCode": 403,
+    //         "error": {
+    //             "startDate": "Start date conflicts with an existing booking",
+    //             "endDate": "End date conflicts with an existing booking"
+    //         }
+    //     })
+    // }
+
+    // if (bookingStartMiliSec >= bookingEndMiliSec) {
+    //     return res.status(403).json({
+    //         "message": "Past bookings can't be modified",
+    //         "statusCode": 403
+    //     })
+    // }
+    if (bookingId.userId !== req.user.id) {
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403,
+        })
+    }
     const newBookings = {
         id,
         spotId: bookingId.spotId,
@@ -111,7 +154,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     await bookingId.update(newBookings)
 
-    res.json(bookingId)
+    return res.json(bookingId)
 })
 
 
@@ -152,7 +195,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
             id: req.params.bookingId
         }
     })
-    res.json({
+    return res.json({
         "message": "Successfully deleted",
         "statusCode": 200
     })

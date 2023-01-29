@@ -8,7 +8,7 @@ const Sequelize = require('sequelize')
 router.get('/', async (req, res) => {
     const spotImage = await SpotImage.findAll()
 
-    res.json(spotImage)
+    return res.json(spotImage)
 })
 
 
@@ -41,7 +41,7 @@ router.delete('/:spotImageId', requireAuth, async (req, res) => {
         }
     })
 
-    res.json({
+    return res.json({
         "message": "Successfully deleted",
         "statusCode": 200
     })
