@@ -3,6 +3,7 @@ const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../d
 const Sequelize = require('sequelize')
 const { requireAuth } = require('../../utils/auth');
 const { convertDate } = require('../../utils/validation');
+const spotimage = require('../../db/models/spotimage');
 
 const router = express.Router();
 
@@ -252,10 +253,27 @@ router.get('/current', requireAuth, async (req, res) => {
 //Details of a Spot from an id
 
 router.get('/:spotId', requireAuth, async (req, res) => {
+    const spotId = await Spot.findByPk(req.params.spotId,
+        {
+            include: [
+                {
+                    model: Review
+                },
+                {
+                    model: SpotImage,
+                    attributes: ['id', 'url', 'preview']
+                },
+                {
+                    model: User,
+                    as: 'Owner',
+                    attributes: ['id', 'firstName', 'lastName']
+                },
 
-    const spotId = await Spot.findByPk(req.params.spotId, {
-        where: { ownerId: req.user.id }
-    })
+            ],
+            where: {
+                id: req.params.id
+            }
+        })
 
     if (!spotId) {
         res.status(404).json({
@@ -264,80 +282,95 @@ router.get('/:spotId', requireAuth, async (req, res) => {
         })
     }
 
-    const numberReviews = await Review.count('spotId')
+    let num = 0
+    let spotJSON = spotId.toJSON()
+    spotJSON.numReviews = spotId.Reviews.length;
+    for (let review of spotJSON.Reviews) {
+        num = num + review.stars
+    }
+    spotJSON.avgStarRating = num / spotJSON.numReviews
+    delete spotJSON.Reviews
 
-
-    const spots = await Spot.findAll({
-        where: { ownerId: req.user.id }
-    })
-
-    const owner = await User.findAll({
-        where: { id: spotId.ownerId },
-        attributes: ['id', 'firstName', 'lastName']
-    })
-
-    const spotImages = await SpotImage.findAll({
-        where: {
-            spotId: req.params.spotId
+    if (spotJSON.SpotImages.length > 1) {
+        if (spotJSON.SpotImages[0].id !== spotJSON.SpotImages[1].id) {
+            for (let i = 1; i < spotJSON.SpotImages.length; i++) {
+                spotJSON.SpotImages[i].preview = false
+            }
         }
-    })
-
-    let spotsArray = []
-    for (let spot of spots) {
-        const spotJSON = spot.toJSON()
-
-        let reviews = await Review.findAll({
-            where: { spotId: spotJSON.id },
-            attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
-        })
-        spotJSON.avgRating = reviews[0].toJSON().avgRating
-        spotsArray.push(spotJSON)
     }
+    // console.log(spotJSON.SpotImages.length)
 
-    const returnSpotId = {
-        "id": spotId.id,
-        "ownerId": req.user.id,
-        "address": spotId.address,
-        "city": spotId.city,
-        "state": spotId.state,
-        "country": spotId.country,
-        "lat": spotId.lat,
-        "lng": spotId.lng,
-        "name": spotId.name,
-        "description": spotId.description,
-        "price": spotId.price,
-        "createdAt": spotId.createdAt,
-        "updatedAt": spotId.updatedAt,
-        "numReviews": numberReviews,
-        "avgStarRating": spotsArray[0].avgRating,
-        "spotImages": spotImages,
-        "Owner": owner
-    }
-
-    res.json(returnSpotId)
+    res.json(spotJSON)
 })
+
+// const numberReviews = await Review.count('spotId')
+
+
+// const spots = await Spot.findAll({
+//     where: { ownerId: req.user.id }
+// })
+
+// const owner = await User.findAll({
+//     where: { id: spotId.ownerId },
+//     attributes: ['id', 'firstName', 'lastName']
+// })
+
+// const spotImages = await SpotImage.findAll({
+//     where: {
+//         spotId: req.params.spotId
+//     }
+// })
+
+// let spotsArray = []
+// for (let spot of spots) {
+//     const spotJSON = spot.toJSON()
+
+//     let reviews = await Review.findAll({
+//         where: { spotId: spotJSON.id },
+//         attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
+//     })
+//     spotJSON.avgRating = reviews[0].toJSON().avgRating
+//     spotsArray.push(spotJSON)
+// }
+
+// const returnSpotId = {
+//     "id": spotId.id,
+//     "ownerId": req.user.id,
+//     "address": spotId.address,
+//     "city": spotId.city,
+//     "state": spotId.state,
+//     "country": spotId.country,
+//     "lat": spotId.lat,
+//     "lng": spotId.lng,
+//     "name": spotId.name,
+//     "description": spotId.description,
+//     "price": spotId.price,
+//     "createdAt": spotId.createdAt,
+//     "updatedAt": spotId.updatedAt,
+//     "numReviews": numberReviews,
+//     "avgStarRating": spotsArray[0].avgRating,
+//     "spotImages": spotImages,
+//     "Owner": owner
+// }
+
 
 //edit a spot
 router.put('/:spotId', requireAuth, async (req, res) => {
 
-    const spotId = await Spot.findByPk(req.params.spotId,
-        {
-            attributes: {
-                exclude: ['avgRating', 'previewImage']
-            }
-        }
-    )
+    const spotId = await Spot.findByPk(req.params.spotId)
+
+
+    if (!spotId) {
+        res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
 
     if (req.user.id !== spotId.ownerId) {
         res.status(403).json({
             message: "Forbidden",
             statusCode: 403
-        })
-    }
-    if (!spotId) {
-        res.status(404).json({
-            "message": "Spot couldn't be found",
-            "statusCode": 404
         })
     }
 
@@ -457,14 +490,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
 // get a spots review
 router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
-    const spotId = await Spot.findByPk(req.params.spotId, {
-        where: {
-            spotId: req.user.id
-        },
-        attributes: {
-            exclude: ['description', 'avgRating', 'createdAt', 'updatedAt']
-        }
-    })
+    const spotId = await Spot.findByPk(req.params.spotId)
 
     if (!spotId) {
         return res.status(404).json({
@@ -474,39 +500,24 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
     }
 
     const allReviews = await Review.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+                model: ReviewImage,
+                attributes: ['id', 'url']
+            },
+        ],
         where: {
-            userId: req.user.id
+            spotId: spotId.id
         }
     })
 
-    const userName = await User.findAll({
-        attributes: ['id', 'firstName', 'lastName'],
-        where: {
-            id: allReviews[0].userId
-        }
+    res.json({
+        "Reviews": allReviews
     })
-
-    const reviewImages = await ReviewImage.findAll({
-        where: {
-            reviewId: allReviews[0].id
-        }
-    })
-
-    const reviews = {
-        Reviews: {
-            id: allReviews[0].id,
-            userId: allReviews[0].userId,
-            spotId: allReviews[0].spotId,
-            review: allReviews[0].review,
-            stars: allReviews[0].stars,
-            createdAt: allReviews[0].createdAt,
-            updatedAt: allReviews[0].updatedAt,
-            User: userName[0],
-            "ReviewImages": reviewImages
-        }
-    }
-
-    res.json(reviews)
 })
 
 
