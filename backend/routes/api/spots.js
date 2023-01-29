@@ -610,9 +610,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
 
     const { startDate, endDate, createdAt, updatedAt } = req.body
-
+    if (!startDate) bookingErr.errors.startDate = "Start date is required"
+    if (!endDate) bookingErr.errors.endDate = "End date is required"
     if (startDate > endDate) bookingErr.errors.endDate = "endDate cannot come before startDate"
-    if (startDate > endDate) {
+
+    if (!startDate || !endDate || (startDate > endDate)) {
         return res.status(400).json(bookingErr)
     }
 

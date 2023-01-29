@@ -56,7 +56,21 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     }
 
 
+    const bookingErrs = {
+        "message": "Validation error",
+        "statusCode": 400,
+        "errors": {}
+    }
+
     const { id, startDate, endDate, createdAt, updatedAt } = req.body
+
+    if (!startDate) bookingErrs.errors.startDate = "Start date is required"
+    if (!endDate) bookingErrs.errors.endDate = "End date is required"
+    if (startDate > endDate) bookingErrs.errors.endDate = "endDate cannot come before startDate"
+
+    if (!startDate || !endDate || (startDate > endDate)) {
+        return res.status(400).json(bookingErrs)
+    }
 
     if (startDate > endDate) {
         res.status(400);
@@ -77,65 +91,65 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         })
     }
 
-    let allBookingDatesForSpot = await Booking.findAll({
-        where: {
-            spotId: bookingId.spotId
-        }
-    })
+    // let allBookingDatesForSpot = await Booking.findAll({
+    //     where: {
+    //         spotId: bookingId.spotId
+    //     }
+    // })
 
-    let bookingErr = new Error("Sorry, this spot is already booked for the specified dates")
-    bookingErr.status = 403
-    bookingErr.title = "Booking Conflict"
-    for (let booking of allBookingDatesForSpot) {
-        if (endDate <= booking.endDate && endDate > booking.startDate) {
-            { bookingErr.errors = "End date conflicts with an existing booking" }
-        }
-        if (startDate >= booking.startDate && startDate < booking.endDate) {
-            {
-                bookingErr.errors = "Start date conflicts with an existing booking"
+    // let bookingErr = new Error("Sorry, this spot is already booked for the specified dates")
+    // bookingErr.status = 403
+    // bookingErr.title = "Booking Conflict"
+    // for (let booking of allBookingDatesForSpot) {
+    //     if (endDate <= booking.endDate && endDate > booking.startDate) {
+    //         { bookingErr.errors = "End date conflicts with an existing booking" }
+    //     }
+    //     if (startDate >= booking.startDate && startDate < booking.endDate) {
+    //         {
+    //             bookingErr.errors = "Start date conflicts with an existing booking"
+    //         }
+    //     }
+    //     if (booking.startDate > startDate && booking.endDate < endDate) {
+    //         { bookingErr.errors = "Start date conflicts with an existing booking", "End date conflicts with an existing booking" }
+    //     }
+
+    // }
+    // if (bookingErr.errors) {
+    //     return next(bookingErr)
+    // }
+
+    const startMiliSec = convertDate(startDate)
+    const endMiliSec = convertDate(endDate)
+
+    if (startMiliSec > endMiliSec) {
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "error": {
+                "endDate": "endDate cannot be on or before startDate"
             }
-        }
-        if (booking.startDate > startDate && booking.endDate < endDate) {
-            { bookingErr.errors = "Start date conflicts with an existing booking", "End date conflicts with an existing booking" }
-        }
-
-    }
-    if (bookingErr.errors) {
-        return next(bookingErr)
+        })
     }
 
-    // const startMiliSec = convertDate(startDate)
-    // const endMiliSec = convertDate(endDate)
+    const bookingStartMiliSec = convertDate(bookingId.startDate)
+    const bookingEndMiliSec = convertDate(bookingId.endDate)
+    if (bookingStartMiliSec === startMiliSec || bookingEndMiliSec === endMiliSec) {
+        return res.status(403).json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "statusCode": 403,
+            "error": {
+                "startDate": "Start date conflicts with an existing booking",
+                "endDate": "End date conflicts with an existing booking"
+            }
+        })
+    }
 
-    // if (startMiliSec > endMiliSec) {
-    //     return res.status(400).json({
-    //         "message": "Validation Error",
-    //         "statusCode": 400,
-    //         "error": {
-    //             "endDate": "endDate cannot be on or before startDate"
-    //         }
-    //     })
-    // }
-
-    // const bookingStartMiliSec = convertDate(bookingId.startDate)
-    // const bookingEndMiliSec = convertDate(bookingId.endDate)
-    // if (bookingStartMiliSec === startMiliSec || bookingEndMiliSec === endMiliSec) {
-    //     return res.status(403).json({
-    //         "message": "Sorry, this spot is already booked for the specified dates",
-    //         "statusCode": 403,
-    //         "error": {
-    //             "startDate": "Start date conflicts with an existing booking",
-    //             "endDate": "End date conflicts with an existing booking"
-    //         }
-    //     })
-    // }
-
-    // if (bookingStartMiliSec >= bookingEndMiliSec) {
-    //     return res.status(403).json({
-    //         "message": "Past bookings can't be modified",
-    //         "statusCode": 403
-    //     })
-    // }
+    if (bookingStartMiliSec >= bookingEndMiliSec) {
+        return res.status(403).json({
+            "message": "Past bookings can't be modified",
+            "statusCode": 403
+        })
+    }
     if (bookingId.userId !== req.user.id) {
         return res.status(403).json({
             message: "Forbidden",
