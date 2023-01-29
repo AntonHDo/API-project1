@@ -34,11 +34,11 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         })
     }
 
-    const imageId = await ReviewImage.findAll({
-        where: {
-            reviewId: req.params.reviewId
-        }
-    })
+    // const imageId = await ReviewImage.findAll({
+    //     where: {
+    //         reviewId: req.params.reviewId
+    //     }
+    // })
 
     const reviewAdded = await ReviewImage.count('id')
 
