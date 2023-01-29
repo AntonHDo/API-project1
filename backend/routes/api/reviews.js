@@ -1,17 +1,55 @@
 const express = require('express');
 const router = express.Router();
-const { Review, ReviewImage, User } = require('../../db/models');
+const { Review, ReviewImage, User, Spot, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { Op, Sequelize } = require("sequelize");
+const spot = require('../../db/models/spot');
 
 //get reviews from current user
 router.get('/current', async (req, res) => {
-    const review = await Review.findAll({
+
+
+    const reviews = await Review.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+                model: Spot,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            },
+            {
+                model: ReviewImage,
+                attributes: ['id', 'url']
+            }
+        ],
         where: {
             userId: req.user.id
         }
     })
-    res.status(200).json(review)
+
+    // const spots = await Spot.findAll({
+    //     where: {
+    //         id: reviews[0].spotId
+    //     }
+    // })
+    // let spotArray = []
+    // for (let spot of spots) {
+    //     const spotJSON = spot.toJSON()
+
+    //     let spotImage = await SpotImage.findAll({
+    //         attributes: ['url'],
+    //         where: { spotId: spotJSON.id }
+    //     })
+    //     spotJSON.previewImage = spotImage[0]
+    //     spotArray.push(spotJSON)
+    // }
+
+
+    res.status(200).json(reviews)
 })
 
 

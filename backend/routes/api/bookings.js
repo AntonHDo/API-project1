@@ -30,7 +30,7 @@ router.get('/current', requireAuth, async (req, res) => {
         "updatedAt": booking[0].updatedAt
     }
 
-    res.json({ "Booking": [currentUsersBooking] })
+    res.json({ "Bookings": [currentUsersBooking] })
 })
 
 
