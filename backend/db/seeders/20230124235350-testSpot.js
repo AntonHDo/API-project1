@@ -21,9 +21,7 @@ module.exports = {
         description: "Place where web developers are created",
         price: 123,
         createdAt: "2021-11-19 20:39:36",
-        updatedAt: "2021-11-19 20:39:36",
-        avgRating: 4.5,
-        previewImage: "image url"
+        updatedAt: "2021-11-19 20:39:36"
       },
       {
         ownerId: 2,
@@ -37,9 +35,7 @@ module.exports = {
         description: "Gotta catch em all",
         price: 432,
         createdAt: "1994-02-14 20:39:36",
-        updatedAt: "2234-12-02 20:39:36",
-        avgRating: 1.5,
-        previewImage: "image url"
+        updatedAt: "2234-12-02 20:39:36"
       },
       {
         ownerId: 3,
@@ -53,9 +49,7 @@ module.exports = {
         description: "Burgers are united",
         price: 2000,
         createdAt: "1990-12-1 20:39:36",
-        updatedAt: "2001-11-19 20:39:36",
-        avgRating: 0.5,
-        previewImage: "image url"
+        updatedAt: "2001-11-19 20:39:36"
       }
     ])
   },
