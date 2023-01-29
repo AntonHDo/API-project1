@@ -1,8 +1,8 @@
 const express = require('express');
-const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
+const { requireAuth } = require('../../utils/auth');
 const { SpotImage, Spot, User } = require('../../db/models');
-
+const Sequelize = require('sequelize')
 
 // get all spotimages
 router.get('/', async (req, res) => {
@@ -15,24 +15,30 @@ router.get('/', async (req, res) => {
 //delete spotimage by id
 router.delete('/:spotImageId', requireAuth, async (req, res) => {
     const spotImageId = await SpotImage.findByPk(req.params.spotImageId)
+
+    const spots = await Spot.findAll({
+        where: { ownerId: req.user.id }
+    })
+
     if (!spotImageId) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Spot Image couldn't be found",
             "statusCode": 404
-        })
+        });
     }
-
-    let spotId = await Spot.findByPk(req.user.id.spotId
-    )
-    console.log("dsfsadddddssssssssssssssssssssdfsd", spotId)
-    if (req.user.id !== spotImageId.id) {
-        res.status(403).json({
+    if (req.user.id !== spots[0].ownerId) {
+        return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
         })
     }
 
-    await spotImageId.destroy()
+    await spotImageId.destroy({
+        where: {
+            id: req.params.spotImageId
+        }
+    })
+
     res.json({
         "message": "Successfully deleted",
         "statusCode": 200

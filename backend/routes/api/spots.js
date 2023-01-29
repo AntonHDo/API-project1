@@ -2,7 +2,7 @@ const express = require('express')
 const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models');
 const Sequelize = require('sequelize')
 const { requireAuth } = require('../../utils/auth');
-const { convertDate } = require('../../utils/validation')
+const { convertDate } = require('../../utils/validation');
 
 const router = express.Router();
 
@@ -37,7 +37,11 @@ router.get('/', requireAuth, async (req, res) => {
         }
     }
 
-    const spots = await Spot.findAll(
+    const spots = await Spot.findAll({
+        include: {
+            model: SpotImage
+        }
+    }
     )
     let spotsArray = []
 
@@ -47,18 +51,20 @@ router.get('/', requireAuth, async (req, res) => {
             where: { spotId: spotJSON.id },
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
-        let spotImage = await SpotImage.findAll({
-            attributes: ['url'],
-            where: { spotId: spotJSON.id }
-        })
+
 
         spotJSON.avgRating = reviews[0].toJSON().avgRating
 
-        spotJSON.previewImage = spotImage[0]
-
-
         spotsArray.push(spotJSON)
+    }
 
+    for (let spot of spotsArray) {
+        for (let prev of spot.SpotImages) {
+            if (prev.preview === true) {
+                spot.previewImage = prev.url
+            }
+            delete spot.SpotImages
+        }
     }
 
     if (page === 0 || size === 0) {
@@ -100,12 +106,6 @@ router.post('/', requireAuth, async (req, res) => {
     }
 
 
-    const owner = await Spot.findAll({
-        where: {
-            ownerId: req.user.id
-        }
-    })
-
     const spot = await Spot.create({
         ownerId: req.user.id,
         address,
@@ -123,12 +123,12 @@ router.post('/', requireAuth, async (req, res) => {
 })
 
 
-//post a image on spots based on spotId
+//create a image on spots based on spotId
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     // Your code here
     const spot = await Spot.findByPk(req.params.spotId, {
         where: {
-            spotId: req.user.id
+            ownerId: req.user.id
         }
     })
 
@@ -146,22 +146,38 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
         })
     }
 
-    const { url, preview, updatedAt, createdAt } = req.body
+    const { url, preview } = req.body
 
+    // const currImages = await SpotImage.findAll({
+    //     attributes: ['url', 'preview'],
+    //     where: {
+    //         spotId: req.params.spotId,
+    //     }
+    // })
 
-    let newImage = await SpotImage.create({
+    // console.log(currImages[0])
+
+    let newImage = await spot.createSpotImage({
+        spotId: req.params.spotId,
         url,
-        preview,
-        spotId: req.params.spotId
+        preview
     })
 
-    await SpotImage.findAll({
-        where: {
-            spotId: req.params.spotId
-        }
-    })
+    // await SpotImage.findAll({
+    //     attributes: {
+    //         exclude: ['createdAt', 'updatedAt']
+    //     },
+    //     where: {
+    //         spotId: spot.id
+    //     }
+    // })
+    // console.log("meweeee", newImage.SpotImage)
 
-    res.json(newImage)
+    res.json({
+        id: newImage.id,
+        url: newImage.url,
+        preview: newImage.preview
+    })
 })
 
 
@@ -192,6 +208,9 @@ router.get('/current', requireAuth, async (req, res) => {
     //     spotsArray.push(spotJSON)
     // }
     const allSpotsFromCurrUser = await Spot.findAll({
+        include: {
+            model: SpotImage
+        },
         where: { ownerId: req.user.id }
     })
 
@@ -202,16 +221,27 @@ router.get('/current', requireAuth, async (req, res) => {
             where: { spotId: spotJSON.id },
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
-        let currentusersSpotImage = await SpotImage.findAll({
-            attributes: ['url'],
-            where: { spotId: spotJSON.id }
-        })
-        // console.log(spotImage)
+
         spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating
-        spotJSON.previewImage = currentusersSpotImage[0]
 
         currentUsersSpotsArray.push(spotJSON)
     }
+
+    for (let spot of currentUsersSpotsArray) {
+        for (let prev of spot.SpotImages) {
+            if (prev.preview === true) {
+                spot.previewImage = prev.url
+            }
+            delete spot.SpotImages
+        }
+    }
+
+    // console.log(currentUsersSpotsArray)
+    // spotJSON.previewImage = currentusersSpotImage[0]
+
+    // for (let spots of currentUsersSpotsArray) {
+    //     console.log(spots)
+    // }
 
     res.status(200).json({
         Spots: currentUsersSpotsArray
@@ -357,12 +387,13 @@ router.put('/:spotId', requireAuth, async (req, res) => {
 //post a review on spots by spotId
 router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     // Your code here
-    const spots = await Spot.findByPk(req.params.spotId,
-        {
+    const spots = await Spot.findByPk(req.params.spotId
+        , {
             where: {
                 ownerId: req.user.id
             }
         })
+
     if (!spots) {
         res.status(404).json({
             "message": "Spot couldn't be found",
@@ -566,11 +597,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         })
     }
 
-    const bookingErr = {
-        "message": "Validation Error",
-        "statusCode": 400,
-        "errors": {}
-    }
+    // const bookingErr = {
+    //     "message": "Validation Error",
+    //     "statusCode": 400,
+    //     "errors": {}
+    // }
 
     const { startDate, endDate, createdAt, updatedAt } = req.body
 
@@ -611,7 +642,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const postBooking = await Booking.create({
         spotId: spotId.id,
-        userId: req.user.id,
+        userId: spotId.ownerId,
         startDate,
         endDate,
         createdAt,

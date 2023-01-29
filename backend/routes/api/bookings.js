@@ -1,36 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const { Booking, Spot, User } = require('../../db/models');
+const { Booking, Spot, User, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { convertDate } = require('../../utils/validation')
 
 //gets all bookings of a current user
 router.get('/current', requireAuth, async (req, res) => {
-    const booking = await Booking.findAll({
-        where: { userId: req.user.id }
-    })
-    const spot = await Spot.findAll({
+    const bookings = await Booking.findAll({
+        include: [
+            {
+                model: Spot,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                include: {
+                    model: SpotImage
+                }
+            }
+        ],
         where: {
-            id: booking[0].spotId
-        },
-        attributes: {
-            exclude: ['avgRating', 'createdAt', 'updatedAt', 'description']
+            userId: req.user.id
         }
     })
-    // const user = await User.findAll()
 
-    const currentUsersBooking = {
-        "id": booking[0].id,
-        "spotId": booking[0].spotId,
-        "Spot": spot[0],
-        "userId": booking[0].userId,
-        "startDate": booking[0].startDate,
-        "endDate": booking[0].endDate,
-        "createdAt": booking[0].createdAt,
-        "updatedAt": booking[0].updatedAt
+
+    let previewArr = []
+    for (let review of bookings) {
+        previewArr.push(review.toJSON())
+    }
+    for (let review of previewArr) {
+        for (let prevImg of review.Spot.SpotImages) {
+            if (prevImg.preview === true) {
+                review.Spot.previewImage = prevImg.url
+            }
+            delete review.Spot.SpotImages
+        }
     }
 
-    res.json({ "Bookings": [currentUsersBooking] })
+
+    res.json(previewArr)
 })
 
 
@@ -38,17 +46,7 @@ router.get('/current', requireAuth, async (req, res) => {
 // edit a booking
 router.put('/:bookingId', requireAuth, async (req, res) => {
 
-    const bookingId = await Booking.findByPk(req.params.bookingId, {
-        where: {
-            userId: req.user.id
-        }
-    })
-
-    const spot = await Spot.findAll({
-        where: {
-            ownerId: req.user.id
-        }
-    })
+    const bookingId = await Booking.findByPk(req.params.bookingId)
 
     if (!bookingId) {
         res.status(404).json({
@@ -64,7 +62,9 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
-    const { id, spotId, userId, startDate, endDate, createdAt, updatedAt } = req.body
+
+
+    const { id, startDate, endDate, createdAt, updatedAt } = req.body
 
     const startMiliSec = convertDate(startDate)
     const endMiliSec = convertDate(endDate)
@@ -101,8 +101,8 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     const newBookings = {
         id,
-        spotId,
-        userId: req.user.id,
+        spotId: bookingId.spotId,
+        userId: bookingId.userId,
         startDate,
         endDate,
         createdAt,
@@ -119,12 +119,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
 // deletes a booking
 router.delete('/:bookingId', requireAuth, async (req, res) => {
-    const bookingId = await Booking.findByPk(req.params.bookingId, {
-        where: {
-            userId: req.user.id
-        }
-    })
-
+    const bookingId = await Booking.findByPk(req.params.bookingId)
 
     if (!bookingId) {
         res.status(404).json({
@@ -133,24 +128,25 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
+    let spotId = await Spot.findByPk(bookingId.spotId);
 
-    let now = new Date()
 
-    if (new Date(bookingId.startDate) <= now) {
+    if (bookingId.userId !== req.user.id && spotId.ownerId !== req.user.id) {
+        res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+
+    let now = new Date().getTime
+
+    if (new Date(bookingId.startDate).getTime() < now) {
         return res.status(403).json({
             "message": "Bookings that have been started can't be deleted",
             "statusCode": 403
         })
     }
 
-    let spotId = await Spot.findByPk(req.user.id.spotId);
-
-    if (req.user.id !== bookingId.userId || spotId.ownerId !== req.user.id) {
-        res.status(403).json({
-            message: "Forbidden",
-            statusCode: 403
-        })
-    }
     await bookingId.destroy({
         where: {
             id: req.params.bookingId

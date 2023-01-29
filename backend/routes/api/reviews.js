@@ -19,6 +19,9 @@ router.get('/current', async (req, res) => {
                 model: Spot,
                 attributes: {
                     exclude: ['createdAt', 'updatedAt']
+                },
+                include: {
+                    model: SpotImage
                 }
             },
             {
@@ -31,32 +34,32 @@ router.get('/current', async (req, res) => {
         }
     })
 
-    // const spots = await Spot.findAll({
-    //     where: {
-    //         id: reviews[0].spotId
-    //     }
-    // })
-    // let spotArray = []
-    // for (let spot of spots) {
-    //     const spotJSON = spot.toJSON()
-
-    //     let spotImage = await SpotImage.findAll({
-    //         attributes: ['url'],
-    //         where: { spotId: spotJSON.id }
-    //     })
-    //     spotJSON.previewImage = spotImage[0]
-    //     spotArray.push(spotJSON)
-    // }
+    let previewArr = []
+    for (let review of reviews) {
+        previewArr.push(review.toJSON())
+    }
 
 
-    res.status(200).json(reviews)
+    for (let review of previewArr) {
+        for (let prevImg of review.Spot.SpotImages) {
+            if (prevImg.preview === true) {
+                review.Spot.previewImage = prevImg.url
+            }
+            delete review.Spot.SpotImages
+        }
+    }
+
+
+    res.status(200).json(previewArr)
 })
 
 
 // post reviewimage
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     // Your code here
-    const reviews = await Review.findByPk(req.params.reviewId)
+    const reviews = await Review.findByPk(req.params.reviewId, {
+        include: { model: ReviewImage }
+    })
 
     if (!reviews) {
         res.status(404).json({
@@ -72,15 +75,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         })
     }
 
-    // const imageId = await ReviewImage.findAll({
-    //     where: {
-    //         reviewId: req.params.reviewId
-    //     }
-    // })
-
-    const reviewAdded = await ReviewImage.count('id')
-
-    if (reviewAdded > 10) {
+    if (reviews.ReviewImages.length >= 10) {
         res.status(403).json({
             "message": "Maximum number of images for this resource was reached",
             "statusCode": 403
@@ -89,10 +84,14 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
     const { url } = req.body
 
-    const image = await ReviewImage.create({
+    const image = await reviews.createReviewImage({
+        reviewId: req.params.reviewId,
         url
     })
-    res.json(image)
+    res.json({
+        id: image.id,
+        url: image.url
+    })
 })
 
 
