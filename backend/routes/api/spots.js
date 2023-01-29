@@ -252,7 +252,7 @@ router.get('/:spotId', requireAuth, async (req, res) => {
 
     const owner = await User.findAll({
         where: { id: spotId.ownerId },
-        attributes: ['id', 'firstname', 'lastname']
+        attributes: ['id', 'firstName', 'lastName']
     })
 
     const spotImages = await SpotImage.findAll({
@@ -458,7 +458,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
     })
 
     const userName = await User.findAll({
-        attributes: ['id', 'firstname', 'lastname'],
+        attributes: ['id', 'firstName', 'lastName'],
         where: {
             id: allReviews[0].userId
         }

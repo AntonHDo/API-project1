@@ -36,8 +36,8 @@ router.post(
         const token = await setTokenCookie(res, user);
         const returnUser = {
             "id": user.id,
-            "firstName": user.firstname,
-            "lastName": user.lastname,
+            "firstName": user.firstName,
+            "lastName": user.lastName,
             "email": user.email,
             "username": user.username,
             "token": token
