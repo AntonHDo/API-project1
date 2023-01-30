@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 //Add Query Filters
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', async (req, res) => {
     let { page, size } = req.query
     let pagination = {}
     page = parseInt(page)
@@ -629,6 +629,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
 
     const allBookings = await Booking.findAll({
+        attributes: ['startDate', 'endDate'],
         where: {
             spotId: spotId.id
         }
@@ -651,6 +652,13 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         }
     }
 
+    if (bookingErr.errors["endDate"] || bookingErr.errors["startDate"]) {
+        return res.status(400).json({
+            "message": "Can't book a spot in the past",
+            "statusCode": 400,
+            "errors": bookingErr.errors
+        })
+    }
 
 
     if (spotId.ownerId === req.user.id) {
