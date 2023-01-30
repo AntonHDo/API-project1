@@ -253,7 +253,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
 //Details of a Spot from an id
 
-router.get('/:spotId', requireAuth, async (req, res) => {
+router.get('/:spotId', async (req, res) => {
     const spotId = await Spot.findByPk(req.params.spotId,
         {
             include: [
@@ -490,7 +490,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 })
 
 // get a spots review
-router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
+router.get('/:spotId/reviews', async (req, res, next) => {
     const spotId = await Spot.findByPk(req.params.spotId)
 
     if (!spotId) {
