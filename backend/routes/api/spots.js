@@ -654,7 +654,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     if (bookingErr.errors["endDate"] || bookingErr.errors["startDate"]) {
         return res.status(400).json({
-            "message": "Can't book a spot in the past",
+            "message": "Sorry, this spot is already booked for the specified dates",
             "statusCode": 400,
             "errors": bookingErr.errors
         })
