@@ -48,6 +48,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     const bookingId = await Booking.findByPk(req.params.bookingId)
 
+
     if (!bookingId) {
         return res.status(404).json({
             "message": "Booking Couldn't be found",
@@ -175,8 +176,11 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
 
 // deletes a booking
-router.delete('/:bookingId', requireAuth, async (req, res) => {
+router.delete("/:bookingId", requireAuth, async (req, res) => {
+
     const bookingId = await Booking.findByPk(req.params.bookingId)
+
+    // console.log("bookingId:", bookingId)
 
     if (!bookingId) {
         return res.status(404).json({
@@ -187,17 +191,17 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
 
     let spotId = await Spot.findByPk(bookingId.spotId);
 
-
-    if (bookingId.userId !== req.user.id || spotId.ownerId !== req.user.id) {
+    if (bookingId.userId !== req.user.id && spotId.ownerId !== req.user.id) {
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
         })
     }
 
-    let now = new Date().getTime
 
-    if (new Date(bookingId.startDate).getTime() < now) {
+    let now = new Date()
+
+    if (new Date(bookingId.startDate) <= now) {
         return res.status(403).json({
             "message": "Bookings that have been started can't be deleted",
             "statusCode": 403
