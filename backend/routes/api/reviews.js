@@ -84,10 +84,23 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
     const { url } = req.body
 
+    if (!url) {
+        res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "error": {
+                "url": "Cannot be empty"
+            }
+        })
+    };
+
+
     const image = await reviews.createReviewImage({
         reviewId: req.params.reviewId,
         url
     })
+
+
     return res.json({
         id: image.id,
         url: image.url

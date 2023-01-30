@@ -8,7 +8,7 @@ const spotimage = require('../../db/models/spotimage');
 const router = express.Router();
 
 
-//Add Query Filters
+//Add Query Filters & Get All Spots
 router.get('/', async (req, res) => {
     let { page, size } = req.query
     let pagination = {}
@@ -43,8 +43,7 @@ router.get('/', async (req, res) => {
             model: SpotImage
         },
         ...pagination
-    }
-    )
+    })
     let spotsArray = []
 
     for (let spot of spots) {
