@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import AllSpots from "./components/Spots";
+import CurrentUserSpot from "./components/CurrentUserSpot";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,6 +20,12 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <AllSpots />
+          </Route>
+          <Route path="/current" exact>
+            <CurrentUserSpot />
+          </Route>
+          <Route path="*">
+            <div className="pageNotFound">404 Page Not Found</div>
           </Route>
         </Switch>
       )}

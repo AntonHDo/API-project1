@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getSpots } from "../../store/spots";
 import './Spots.css'
 import { NavLink } from "react-router-dom";
+
+
 const AllSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots)
@@ -12,6 +14,7 @@ const AllSpots = () => {
     useEffect(() => {
         dispatch(getSpots())
     }, [dispatch])
+
     return (
         <div className="spotsPage">
             <div className="eachSpot">
