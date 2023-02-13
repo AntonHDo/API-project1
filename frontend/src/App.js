@@ -5,6 +5,7 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import AllSpots from "./components/Spots";
 import CurrentUserSpot from "./components/CurrentUserSpot";
+import SpotDetail from "./components/SpotDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +24,9 @@ function App() {
           </Route>
           <Route path="/current" exact>
             <CurrentUserSpot />
+          </Route>
+          <Route path="/spots/:spotId" exact>
+            <SpotDetail />
           </Route>
           <Route path="*">
             <div className="pageNotFound">404 Page Not Found</div>

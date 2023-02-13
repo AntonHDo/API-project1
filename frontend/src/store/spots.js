@@ -54,14 +54,13 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
 
 //spots reducer
 const spotsReducer = (state = {}, action) => {
-    const newState = { ...state }
     switch (action.type) {
         case LOAD_SPOTS:
-            return { newState, ...action.spots.Spots }
+            return { ...action.spots.Spots }
         case LOAD_CURRENT_USER_SPOT:
-            return { newState, ...action.currentUserSpot.Spots }
+            return { ...action.currentUserSpot.Spots }
         case LOAD_SPOT_DETAILS:
-            return { newState, ...action.spot }
+            return { ...action.spot }
         default:
             return state;
     }
