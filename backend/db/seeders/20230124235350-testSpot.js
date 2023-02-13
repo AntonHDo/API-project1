@@ -50,6 +50,48 @@ module.exports = {
         price: 2000,
         createdAt: "1990-12-1 20:39:36",
         updatedAt: "2001-11-19 20:39:36"
+      },
+      {
+        ownerId: 4,
+        address: "351 McDonalds Road",
+        city: "San Bruno",
+        state: "New York",
+        country: "United States of Asia",
+        lat: 64.7635658,
+        lng: -102.47354427,
+        name: "Burger Queens",
+        description: "Burgers are united",
+        price: 2000,
+        createdAt: "1990-12-1 20:39:36",
+        updatedAt: "2001-11-19 20:39:36"
+      },
+      {
+        ownerId: 5,
+        address: "351 McDonalds Road",
+        city: "San Bruno",
+        state: "New York",
+        country: "United States of Asia",
+        lat: 64.7635658,
+        lng: -102.47354427,
+        name: "Burger Queens",
+        description: "Burgers are united",
+        price: 2000,
+        createdAt: "1990-12-1 20:39:36",
+        updatedAt: "2001-11-19 20:39:36"
+      },
+      {
+        ownerId: 6,
+        address: "351 McDonalds Road",
+        city: "San Bruno",
+        state: "New York",
+        country: "United States of Asia",
+        lat: 64.7635658,
+        lng: -102.47354427,
+        name: "Burger Queens",
+        description: "Burgers are united",
+        price: 2000,
+        createdAt: "1990-12-1 20:39:36",
+        updatedAt: "2001-11-19 20:39:36"
       }
     ])
   },

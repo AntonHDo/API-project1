@@ -8,9 +8,7 @@ import CurrentUserSpot from "./components/CurrentUserSpot";
 import SpotDetail from "./components/SpotDetail";
 import CreateSpot from "./components/CreateSpot";
 import EditSpot from "./components/EditSpot";
-import BookingPage from "./components/Bookings/BookingPage";
-import EditBooking from "./components/Bookings/EditBooking";
-import CurrentUserBooking from "./components/Bookings/CurrentUserBooking";
+import CurrentReviews from "./components/Reviews";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,19 +25,13 @@ function App() {
           <Route path="/" exact>
             <AllSpots />
           </Route>
-          <Route path="/current" exact>
+          <Route path="/spots/current" exact>
             <CurrentUserSpot />
           </Route>
-          <Route path="/bookings/current" exact>
-            <CurrentUserBooking />
+          <Route path="/reviews/current" exact>
+            <CurrentReviews />
           </Route>
-          <Route path="/bookings/:bookingId/edit" exact>
-            <EditBooking />
-          </Route>
-          <Route path="/bookings/:bookingId" exact>
-            <BookingPage />
-          </Route>
-          <Route path="/spots/create" exact>
+          <Route path="/spots/new" exact>
             <CreateSpot />
           </Route>
           <Route path="/spots/:spotId/edit" exact>

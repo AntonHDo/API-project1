@@ -22,6 +22,18 @@ module.exports = {
       {
         reviewId: 3,
         url: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_487/at%2Fhouse%20tours%2Farchive%2FKate%20Best%2Ffac74e4e9415e33447bfba2545b36309efb23910",
+      },
+      {
+        reviewId: 4,
+        url: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_487/at%2Fhouse%20tours%2Farchive%2FKate%20Best%2Ffac74e4e9415e33447bfba2545b36309efb23910",
+      },
+      {
+        reviewId: 5,
+        url: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_487/at%2Fhouse%20tours%2Farchive%2FKate%20Best%2Ffac74e4e9415e33447bfba2545b36309efb23910",
+      },
+      {
+        reviewId: 6,
+        url: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_487/at%2Fhouse%20tours%2Farchive%2FKate%20Best%2Ffac74e4e9415e33447bfba2545b36309efb23910",
       }
     ])
 
