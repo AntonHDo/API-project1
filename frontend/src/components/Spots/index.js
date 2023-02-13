@@ -9,7 +9,7 @@ const AllSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots)
     const spotsArray = Object.values(spots)
-
+    console.log(spotsArray)
 
     useEffect(() => {
         dispatch(getSpots())
