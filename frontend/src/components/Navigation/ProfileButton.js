@@ -5,6 +5,7 @@ import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 
+
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
@@ -42,7 +43,10 @@ function ProfileButton({ user }) {
     return (
         <>
             <button onClick={openMenu}>
-                <i className="fas fa-user-circle" />
+                <div className="user-box-container">
+                    <i class="fa-sharp fa-solid fa-bars"></i>
+                    <i className="fas fa-user-circle" />
+                </div>
             </button>
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (

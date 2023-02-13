@@ -27,15 +27,16 @@ const AllSpots = () => {
                                 </div>
                                 <div className="roomDetails">
                                     <div className="roomData">
-                                        <div className="spotLocation">
+                                        <div className="spotLocationContainer">
                                             <div className="spot-city">
-                                                {spot.city} {spot.state}
+                                                {spot.city}, {spot.state}
+                                                <span className="starReview">
+                                                    <i className="fa-sharp fa-solid fa-star"></i>
+                                                    <span>{spot.avgRating}</span>
+                                                </span>
+                                                <div><b>${spot.price}</b> <span>night</span></div>
                                             </div>
-                                            <div className="spotStars">
-                                                <div className="star">
-                                                    starSpot {spot.id}
-                                                </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -47,5 +48,4 @@ const AllSpots = () => {
         </div>
     )
 }
-
 export default AllSpots
