@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editASpot } from "../../store/spots";
 import { getSpots } from "../../store/spots";
 import { createASpot } from "../../store/spots";
+import './EditSpot.css'
 
 const EditSpot = () => {
     const history = useHistory()
