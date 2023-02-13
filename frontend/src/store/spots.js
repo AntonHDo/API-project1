@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const LOAD_CURRENT_USER_SPOT = 'spots/LOAD_CURRENT_USER_SPOT';
 const LOAD_SPOT_DETAILS = 'spots/LOAD_SPOT_DETAILS'
+const REMOVE_SPOT = 'spots/REMOVE_SPOT'
 
 const loadSpots = (spots) => {
     return {
@@ -24,8 +25,11 @@ const loadSpotDetails = (spot) => {
     }
 }
 
-
-
+const removeSpot = () => {
+    return {
+        type: REMOVE_SPOT
+    }
+}
 
 //get all spots
 export const getSpots = () => async dispatch => {
@@ -54,6 +58,7 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
     }
 }
 
+
 //create a spot
 export const createASpot = (spot) => async () => {
     const newSpot = await csrfFetch(`/api/spots`, {
@@ -66,6 +71,7 @@ export const createASpot = (spot) => async () => {
     const aNewSpot = await newSpot.json();
     return aNewSpot
 }
+
 
 //create a image
 export const createImageForSpot = (spotId, image) => async () => {
@@ -80,6 +86,7 @@ export const createImageForSpot = (spotId, image) => async () => {
     return aNewImg
 }
 
+
 //edit a spot
 export const editASpot = (spot, spotId) => async () => {
     const updateSpot = await csrfFetch(`/api/spots/${spotId}`, {
@@ -93,6 +100,7 @@ export const editASpot = (spot, spotId) => async () => {
     return updatedSpot
 }
 
+
 //delete a spot
 export const deleteASpot = (spotId) => async () => {
     const deleteSpot = await csrfFetch(`/api/spots/${spotId}`, {
@@ -100,6 +108,7 @@ export const deleteASpot = (spotId) => async () => {
     })
     return deleteSpot
 }
+
 
 //spots reducer
 const spotsReducer = (state = {}, action) => {
@@ -110,6 +119,8 @@ const spotsReducer = (state = {}, action) => {
             return { ...action.currentUserSpot.Spots }
         case LOAD_SPOT_DETAILS:
             return { ...action.spot }
+        case REMOVE_SPOT:
+            return {}
         default:
             return state;
     }

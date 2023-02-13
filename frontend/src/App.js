@@ -8,6 +8,9 @@ import CurrentUserSpot from "./components/CurrentUserSpot";
 import SpotDetail from "./components/SpotDetail";
 import CreateSpot from "./components/CreateSpot";
 import EditSpot from "./components/EditSpot";
+import BookingPage from "./components/Bookings/BookingPage";
+import EditBooking from "./components/Bookings/EditBooking";
+import CurrentUserBooking from "./components/Bookings/CurrentUserBooking";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +29,15 @@ function App() {
           </Route>
           <Route path="/current" exact>
             <CurrentUserSpot />
+          </Route>
+          <Route path="/bookings/current" exact>
+            <CurrentUserBooking />
+          </Route>
+          <Route path="/bookings/:bookingId/edit" exact>
+            <EditBooking />
+          </Route>
+          <Route path="/bookings/:bookingId" exact>
+            <BookingPage />
           </Route>
           <Route path="/spots/create" exact>
             <CreateSpot />
@@ -46,4 +58,3 @@ function App() {
 }
 
 export default App;
-//
