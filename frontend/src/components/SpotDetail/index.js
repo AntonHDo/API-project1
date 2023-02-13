@@ -9,7 +9,7 @@ const SpotDetail = () => {
     const history = useHistory()
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots)
-    console.log("here is the spot", spot.name)
+
 
     useEffect(() => {
         dispatch(getDetailOfSpot(spotId))
