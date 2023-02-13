@@ -17,12 +17,14 @@ const loadCurrentUserSpot = (currentUserSpot) => {
     }
 }
 
-const loadSpotDetails = spot => {
+const loadSpotDetails = (spot) => {
     return {
         type: LOAD_SPOT_DETAILS,
         spot
     }
 }
+
+
 
 
 //get all spots
@@ -50,6 +52,53 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
         const list = await response.json();
         dispatch(loadSpotDetails(list));
     }
+}
+
+//create a spot
+export const createASpot = (spot) => async () => {
+    const newSpot = await csrfFetch(`/api/spots`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(spot)
+    });
+    const aNewSpot = await newSpot.json();
+    return aNewSpot
+}
+
+//create a image
+export const createImageForSpot = (spotId, image) => async () => {
+    const newImg = await csrfFetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(image)
+    })
+    const aNewImg = await newImg.json();
+    return aNewImg
+}
+
+//edit a spot
+export const editASpot = (spot, spotId) => async () => {
+    const updateSpot = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(spot)
+    })
+    const updatedSpot = await updateSpot.json()
+    return updatedSpot
+}
+
+//delete a spot
+export const deleteASpot = (spotId) => async () => {
+    const deleteSpot = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE'
+    })
+    return deleteSpot
 }
 
 //spots reducer
