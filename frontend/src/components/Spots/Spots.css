@@ -3,3 +3,24 @@
     flex-wrap: wrap;
     margin: 1rem;
 }
+
+.spotImg {
+    flex-wrap: wrap;
+    width: 270px;
+    height: 250px;
+    float: left;
+    margin: 10px;
+}
+
+.fa-star {
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.starReview {
+    margin-left: 100px;
+}
+
+.spotLocationContainer {
+    margin-right: 10px
+}
