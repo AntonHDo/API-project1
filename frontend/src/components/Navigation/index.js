@@ -6,20 +6,37 @@ import ProfileButton from './ProfileButton';
 import './Navigation.css';
 import logo from '../assets/demologo.PNG'
 
-function Navigation({ isLoaded }) {
-    const sessionUser = useSelector(state => state.session.user);
 
+
+function Navigation({ isLoaded }) {
+
+    const sessionUser = useSelector(state => state.session.user);
     return (
-        <ul className='nav-bar'>
-            <li>
-                <NavLink className='homeBtn' exact to="/"><img className='demologo' src={logo} /></NavLink>
-            </li>
-            {isLoaded && (
-                <li className='profileBtnContainer'>
-                    <ProfileButton user={sessionUser} />
+        <>
+            <ul className='nav-bar' >
+                <li>
+                    <NavLink className='homeBtn' exact to="/"><img className='demologo' src={logo} /></NavLink>
                 </li>
-            )}
-        </ul>
+
+                {isLoaded && (
+
+                    <li className='profileBtnContainer'>
+                        <div className='create-spot-link' >
+                            {sessionUser ? (
+                                <NavLink to={'/spots/new'}>Create a New Spot!</NavLink>
+                            )
+                                : ""
+                            }
+                        </div>
+                        <div>
+                            <ProfileButton user={sessionUser} />
+                        </div>
+                    </li>
+
+                )}
+            </ul>
+            <div className='nav-bar-bottom'></div>
+        </>
     );
 }
 

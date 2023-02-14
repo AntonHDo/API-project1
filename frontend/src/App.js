@@ -31,11 +31,11 @@ function App() {
           <Route path="/reviews/current" exact>
             <CurrentReviews />
           </Route>
-          <Route path="/spots/new" exact>
-            <CreateSpot />
-          </Route>
           <Route path="/spots/:spotId/edit" exact>
             <EditSpot />
+          </Route>
+          <Route path="/spots/new" exact>
+            <CreateSpot />
           </Route>
           <Route path="/spots/:spotId" exact>
             <SpotDetail />
