@@ -27,16 +27,15 @@ const CreateSpot = () => {
     const [imageURL3, setImageURL3] = useState('')
     const [imageURL4, setImageURL4] = useState('')
     const [submit, setSubmit] = useState(false)
-    const [errors, setErrors] = useState([])
-
-
-    useEffect(() => {
-        dispatch(getSpots())
-    }, [dispatch])
+    const [errors, setErrors] = useState({})
 
 
 
     // useEffect(() => {
+    //     dispatch(getSpots())
+    // }, [dispatch])
+
+    // const validations = () => {
     //     const errors = [];
     //     if (!country) errors.push('Country is required')
     //     if (!address) errors.push('Address is required')
@@ -49,22 +48,66 @@ const CreateSpot = () => {
     //     if (!price) errors.push('Price is required')
     //     if (!previewImage) errors.push('Preview image is required')
     //     if (!imageURL.includes('.png', imageURL.length - 1) || !imageURL.includes('.jpg', imageURL.length - 1) || imageURL.includes('.jpeg', imageURL.length - 1)) errors.push('Image URL must end in .png, .jpg, or .jpeg')
-    //     setErrors(errors)
-    // }, [country, address, city, state, latitude, longitude, description, title])
+    //     return errors
+    // }
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const errors = {
+            country: "error" || "",
+            address: "error" || "",
+            city: "error" || "",
+            state: "error" || "",
+            latitude: "error" || "",
+            longitude: "error" || "",
+            description: "error" || "",
+            title: "error" || "",
+            price: "error" || "",
+            previewImage: "error" || "",
+            city: "error" || "",
+        }
+
+        if (!country) errors['country'] = 'Country is required'
+        if (!address) errors['address'] = 'Address is required'
+        if (!city) errors['city'] = 'City is required'
+        if (!state) errors['state'] = 'State is required'
+        if (!latitude) errors['latitude'] = 'Latitude is required'
+        if (!longitude) errors['longitude'] = 'Longitude is required'
+        if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
+        if (!title) errors['title'] = 'Name is required'
+        if (!price) errors['price'] = 'Price is required'
+        if (!previewImage) errors['previewImage'] = 'Preview image is required'
+        // if (!imageURL.includes('.png', imageURL.length - 1) || !imageURL.includes('.jpg', imageURL.length - 1) || imageURL.includes('.jpeg', imageURL.length - 1)) errors[''] = 'Image URL must end in .png, .jpg, or .jpeg'
+
+        console.log("errors:", errors['country'])
+
         if (errors.length) return
 
-        // console.log("you got an error", {
-        //     country, address, city, state, latitude, latitude, description, title, price, previewImage, imageURL
-        // })
+        const data = {
+            country: country,
+            address: address,
+            city: city,
+            state: state,
+            lat: latitude,
+            lng: longitude,
+            description: description,
+            name: title,
+            price: price,
+            previewImage: previewImage,
+            imageURL: imageURL,
+            imageURL2: imageURL2,
+            imageURL3: imageURL3,
+            imageURL4: imageURL4
+        }
+
+        dispatch(createASpot(data))
+
         history.push('/')
     }
 
-    if (submit) {
-        return <Redirect to={'/'} />
-    }
+    // if (submit) {
+    //     return <Redirect to={'/'} />
+    // }
 
     // const validationErrors = validation();
     // if (validationErrors.length > 0) {
@@ -80,11 +123,11 @@ const CreateSpot = () => {
                 <div>Where's your place located?</div>
                 <div>Guests will only get your exact address once they booked a reservation.</div>
 
-                <ul className='spot-form-error'>
+                {/* <ul className='spot-form-error'>
                     {errors.map((error) => (
                         <li key={error}> {error}</li>
                     ))}
-                </ul>
+                </ul> */}
                 <div>Country</div>
                 <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} required />
                 <div>Street Address</div>
@@ -94,9 +137,9 @@ const CreateSpot = () => {
                 <div>State</div>
                 <input type="text" placeholder="STATE" value={state} onChange={(e) => setState(e.target.value)} required />
                 <div>Latitude</div>
-                <input type="number" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
+                <input type="text" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
                 <div>Longitude</div>
-                <input type="number" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} />
+                <input type="text" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} />
                 <hr></hr>
                 <h2>Describe your place to guests</h2>
                 <div>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>
