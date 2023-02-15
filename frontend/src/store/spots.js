@@ -4,6 +4,7 @@ const LOAD_CURRENT_USER_SPOT = 'spots/LOAD_CURRENT_USER_SPOT';
 const LOAD_SPOT_DETAILS = 'spots/LOAD_SPOT_DETAILS'
 const ADD_SPOT = 'spots/ADD_SPOT'
 const REMOVE_SPOT = 'spots/REMOVE_SPOT'
+const EDIT_SPOT = 'spots/EDIT_SPOT'
 
 const loadSpots = (spots) => {
     return {
@@ -20,7 +21,6 @@ const loadCurrentUserSpot = (currentUserSpot) => {
 }
 
 const loadSpotDetails = (spot) => {
-
     return {
         type: LOAD_SPOT_DETAILS,
         spot
@@ -28,10 +28,16 @@ const loadSpotDetails = (spot) => {
 }
 
 const addSpot = (spot) => {
-
     return {
         type: ADD_SPOT,
         spot
+    }
+}
+
+const editSpot = (editedSpot) => {
+    return {
+        type: EDIT_SPOT,
+        editedSpot
     }
 }
 
@@ -93,17 +99,6 @@ export const createASpot = (data) => async (dispatch) => {
     return response
 }
 
-// export const createASpot = (spot) => async () => {
-//     const newSpot = await csrfFetch(`/api/spots`, {
-//         method: 'POST',
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(spot)
-//     });
-//     const aNewSpot = await newSpot.json();
-//     return aNewSpot
-// }
 
 
 //create a image
@@ -121,16 +116,18 @@ export const createImageForSpot = (spotId, image) => async () => {
 
 
 //edit a spot
-export const editASpot = (spot, spotId) => async () => {
-    const updateSpot = await csrfFetch(`/api/spots/${spotId}`, {
+export const editASpot = (spot, spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(spot)
     })
-    const updatedSpot = await updateSpot.json()
-    return updatedSpot
+    if (response.ok) {
+        const editedSpot = await response.json()
+        dispatch(editSpot(editedSpot))
+    }
 }
 
 
@@ -159,6 +156,10 @@ const spotsReducer = (state = initialState, action) => {
             const newState = {}
             action.currentUserSpot.Spots.forEach((spot) => (newState[spot.id] = spot))
             return newState
+        case EDIT_SPOT:
+            const newEdit = { ...state }
+            newEdit[action.editedSpot.id] = action.editedSpot;
+            return newEdit
         case LOAD_SPOT_DETAILS:
             const newSpotDetail = { ...state }
             newSpotDetail[action.spot.id] = action.spot
