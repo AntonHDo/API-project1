@@ -54,17 +54,17 @@ const CreateSpot = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const errors = {
-            country: "error" || "",
-            address: "error" || "",
-            city: "error" || "",
-            state: "error" || "",
-            latitude: "error" || "",
-            longitude: "error" || "",
-            description: "error" || "",
-            title: "error" || "",
-            price: "error" || "",
-            previewImage: "error" || "",
-            city: "error" || "",
+            // country: "error" || "",
+            // address: "error" || "",
+            // city: "error" || "",
+            // state: "error" || "",
+            // latitude: "error" || "",
+            // longitude: "error" || "",
+            // description: "error" || "",
+            // title: "error" || "",
+            // price: "error" || "",
+            // previewImage: "error" || "",
+            // city: "error" || "",
         }
 
         if (!country) errors['country'] = 'Country is required'
@@ -79,9 +79,12 @@ const CreateSpot = () => {
         if (!previewImage) errors['previewImage'] = 'Preview image is required'
         // if (!imageURL.includes('.png', imageURL.length - 1) || !imageURL.includes('.jpg', imageURL.length - 1) || imageURL.includes('.jpeg', imageURL.length - 1)) errors[''] = 'Image URL must end in .png, .jpg, or .jpeg'
 
-        console.log("errors:", errors['country'])
+        console.log("errors:", errors)
 
-        if (errors.length) return
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors)
+            return
+        }
 
         const data = {
             country: country,
@@ -128,14 +131,17 @@ const CreateSpot = () => {
                         <li key={error}> {error}</li>
                     ))}
                 </ul> */}
-                <div>Country</div>
-                <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} required />
+                <div className="country-container">
+                    <div>Country</div>
+                    <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} />
+                    {errors['country'] && <div>{errors['country']}</div>}
+                </div>
                 <div>Street Address</div>
-                <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
+                <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
                 <div>City</div>
-                <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} required />
+                <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
                 <div>State</div>
-                <input type="text" placeholder="STATE" value={state} onChange={(e) => setState(e.target.value)} required />
+                <input type="text" placeholder="STATE" value={state} onChange={(e) => setState(e.target.value)} />
                 <div>Latitude</div>
                 <input type="text" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
                 <div>Longitude</div>
@@ -143,19 +149,19 @@ const CreateSpot = () => {
                 <hr></hr>
                 <h2>Describe your place to guests</h2>
                 <div>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>
-                <input type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <input type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} />
                 <hr></hr>
                 <h2>Create a title for your spot</h2>
                 <div>Catch guests' attention with a spot title that highlights what makes your place special.</div>
-                <input type="text" placeholder="Name of your spot" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                <input type="text" placeholder="Name of your spot" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <hr></hr>
                 <h2>Set a base price for your spot</h2>
                 <div>Competitive pricing can help your listing stand out and rank higher in search results</div>
-                <span><b>$ </b><input type="number" placeholder="Price per night (USD)" value={price} onChange={(e) => setPrice(e.target.value)} required /></span>
+                <span><b>$ </b><input type="number" placeholder="Price per night (USD)" value={price} onChange={(e) => setPrice(e.target.value)} /></span>
                 <hr></hr>
                 <h2>Liven up your spot with photos</h2>
                 <div>Submit a link to at least one photo to publish your spot</div>
-                <input type="text" placeholder="Preview Image URL" value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} required />
+                <input type="text" placeholder="Preview Image URL" value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} />
                 <input type="text" placeholder="Image URL" value={imageURL} onChange={(e) => setImageURL(e.target.value)} />
                 <input type="text" placeholder="Image URL" value={imageURL2} onChange={(e) => setImageURL2(e.target.value)} />
                 <input type="text" placeholder="Image URL" value={imageURL3} onChange={(e) => setImageURL3(e.target.value)} />
