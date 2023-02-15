@@ -76,7 +76,8 @@ export const deleteABooking = (bookingId) => async dispatch => {
     return deleteBooking
 }
 
-const bookingsReducer = (state = {}, action) => {
+const initialState = {}
+const bookingsReducer = (state = initialState, action) => {
     const newState = { ...state }
     switch (action.type) {
         case GET_BOOKINGS:
@@ -85,8 +86,8 @@ const bookingsReducer = (state = {}, action) => {
             newState.currentBooking = action.bookings
             return newState
         case REMOVE_BOOKING:
-            newState.currentBooking = {}
-            newState.spotBooking = {}
+            newState.currentBooking = initialState
+            newState.spotBooking = initialState
             return newState
         default:
             return state;

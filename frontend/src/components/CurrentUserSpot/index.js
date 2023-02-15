@@ -12,7 +12,7 @@ const CurrentUserSpot = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots)
     const spotsArray = Object.values(spots)
-    console.log("this Spot", spotsArray)
+
 
     useEffect(() => {
         dispatch(getCurrentUserSpot())

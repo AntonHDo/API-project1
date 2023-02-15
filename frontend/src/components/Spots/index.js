@@ -9,7 +9,7 @@ const AllSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots)
     const spotsArray = Object.values(spots)
-    console.log(spotsArray)
+
 
     useEffect(() => {
         dispatch(getSpots())
@@ -18,8 +18,10 @@ const AllSpots = () => {
     return (
         <div className="spotsPage">
             <div className="eachSpot">
+
                 {spotsArray.map(spot => (
-                    <div className='spotCard' key={spot.id}>
+                    <div
+                        className='spotCard' key={spot.id}>
                         <NavLink to={`/spots/${spot.id}`}>
                             <div className="room">
                                 <div className="imgDiv">
