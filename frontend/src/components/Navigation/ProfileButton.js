@@ -4,9 +4,10 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
+    const history = useHistory()
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
@@ -36,7 +37,16 @@ function ProfileButton({ user }) {
         e.preventDefault();
         dispatch(sessionActions.logout());
         closeMenu();
+        history.push('/')
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const credential = "Demo-lition";
+        const password = "password";
+        dispatch(sessionActions.login({ credential, password })).then(closeMenu)
+    };
+
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -53,8 +63,8 @@ function ProfileButton({ user }) {
                 {user ? (
 
                     <nav>
-                        <li>Hello, {user.username}</li>
-                        <li>{user.firstName} {user.lastName}</li>
+                        {/* <li>Hello, {user.username}</li> */}
+                        <li>Hello, {user.firstName} {user.lastName}</li>
                         <li>{user.email}</li>
                         <hr></hr>
                         <li><NavLink to={'/spots/current'} className='manage-spot-link'>Manage Spots</NavLink></li>
@@ -74,6 +84,14 @@ function ProfileButton({ user }) {
                             itemText="Sign Up"
                             onItemClick={closeMenu}
                             modalComponent={<SignupFormModal />}
+                        />
+                        <OpenModalMenuItem
+                            itemText="Demo"
+                            onItemClick={closeMenu}
+                            modalComponent={<form onSubmit={handleSubmit}>
+                                <button type="submit">Login</button>
+                            </form>}
+
                         />
                     </>
                 )}
