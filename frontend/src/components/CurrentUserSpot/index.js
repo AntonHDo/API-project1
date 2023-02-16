@@ -18,9 +18,11 @@ const CurrentUserSpot = () => {
     const { closeModal } = useModal();
 
 
-
     useEffect(() => {
-        dispatch(getCurrentUserSpot())
+        const refresh = async () => {
+            await dispatch(getCurrentUserSpot())
+        }
+        refresh()
     }, [dispatch])
 
     // const spots = useSelector(state => state.currentSpots)
@@ -29,6 +31,7 @@ const CurrentUserSpot = () => {
 
 
     const handleCLick = (spot) => {
+
 
         // console.log("spot for handle click", spots.id)
         dispatch(deleteASpot(spot))
@@ -78,7 +81,7 @@ const CurrentUserSpot = () => {
                                 <>
                                     <h2>Confirm Delete</h2>
                                     <p>Are you sure you want to remove this spot from the listings?</p>
-                                    <button onClick={(e) => handleCLick(spot.id)}>
+                                    <button onClick={(e) => handleCLick(spot?.id)}>
                                         Yes
                                     </button>
                                     <button onClick={closeModal}>No</button>

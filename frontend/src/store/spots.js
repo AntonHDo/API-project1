@@ -80,16 +80,18 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
 }
 
 //create a spot
-export const createASpot = (data) => async (dispatch) => {
+export const createASpot = (data, image, owner) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data, image)
     });
     if (response.ok) {
         const newSpot = await response.json();
+
+        console.log("new spot from create a spot", image)
         dispatch(addSpot(newSpot))
         return newSpot
     }
@@ -98,17 +100,17 @@ export const createASpot = (data) => async (dispatch) => {
 
 
 //create an image
-export const createImageForSpot = (spotId, image) => async () => {
-    const newImg = await csrfFetch(`/api/spots/${spotId}/images`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(image)
-    })
-    const aNewImg = await newImg.json();
-    return aNewImg
-}
+// export const createImageForSpot = (spotId, image) => async () => {
+//     const newImg = await csrfFetch(`/api/spots/${spotId}/images`, {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(image)
+//     })
+//     const aNewImg = await newImg.json();
+//     return aNewImg
+// }
 
 
 //edit a spot
@@ -170,7 +172,8 @@ const spotsReducer = (state = initialState, action) => {
             newState.singleSpot = action.spot
             return newState
         case REMOVE_SPOT:
-            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState = { ...state }
             delete newState.allSpots[action.spotId]
             return newState
         default:

@@ -2,9 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getDetailOfSpot } from "../../store/spots";
 import { createASpot } from "../../store/spots";
-import { createImageForSpot } from "../../store/spots";
 import './CreateSpot.css'
 
 const CreateSpot = () => {
@@ -12,6 +10,7 @@ const CreateSpot = () => {
     const history = useHistory()
 
     const spots = useSelector(state => state.spots?.singleSpot)
+    const user = useSelector(state => state.session)
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
@@ -42,7 +41,7 @@ const CreateSpot = () => {
         if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
         if (!name) errors['name'] = 'Name is required'
         if (!price) errors['price'] = 'Price is required'
-        // if (!previewImage) errors['previewImage'] = 'Preview image is required'
+        if (!previewImage) errors['previewImage'] = 'Preview image is required'
         // if (!imageURL.includes('.png')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
 
@@ -61,6 +60,38 @@ const CreateSpot = () => {
             description: description,
             name: name,
             price: price,
+        }
+
+        const image = []
+        if (previewImage)
+            image.push({
+                url: previewImage,
+                preview: true
+            })
+        if (imageURL)
+            image.push({
+                url: imageURL,
+                preview: false
+            })
+        if (imageURL2)
+            image.push({
+                url: imageURL2,
+                preview: false
+            })
+        if (imageURL3)
+            image.push({
+                url: imageURL3,
+                preview: false
+            })
+        if (imageURL4)
+            image.push({
+                url: imageURL4,
+                preview: false
+            })
+
+        const owner = {
+            firstName: user.firstName,
+            lastName: user.lastName
         }
 
         // const data = {
@@ -98,7 +129,8 @@ const CreateSpot = () => {
         //     ]
         // }
 
-        dispatch(createASpot(data))
+
+        dispatch(createASpot(data, image, owner))
 
         history.push(`/spots/${spots.id}`)
     }
