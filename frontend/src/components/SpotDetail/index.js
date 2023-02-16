@@ -12,54 +12,46 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
     const user = useSelector((state) => state.session.user)
+    const getAllReviews = (state) => Object.values(state.reviews.spot)
+    const reviews = useSelector(getAllReviews)
+    //     const testingReviews = () =  > {
+    //         if (user && user.id === '')
+    // }
+
+
+
+    let reviewChecker
+    let reviewNum = spot?.numReviews
+    let unusedreviewNum = spot?.numReviews
+
+    if (reviewNum === 1) {
+        reviewChecker = "review"
+    } else if (reviewNum === 0) {
+        reviewChecker = "New"
+        reviewNum = ""
+    } else {
+        reviewChecker = ' reviews'
+    }
+
+    const noReviewsYet = () => {
+        if (reviewChecker === "New" && user) {
+            return (
+                <div>
+                    Be the first to post a review!
+                </div>
+            )
+        }
+    }
 
     useEffect(() => {
-        const restoreSpot = async () => {
-            await dispatch(getDetailOfSpot(spotId))
-            await dispatch(getReviews(spotId))
+        const restoreSpot = () => {
+            dispatch(getDetailOfSpot(spotId))
+            dispatch(getReviews(spotId))
         }
         restoreSpot()
     }, [dispatch, spotId])
 
 
-    // let previewImgArray
-    // if (spot.SpotImages.length > 0) {
-    //     previewImgArray = spot.SpotImages.filter((image) => {
-    //         if (image.preview === true) {
-    //             return image
-    //         }
-    //     })
-    // }
-
-    // let otherImagesArr = spot?.SpotImages?.filter((image) => {
-    //     if (image.preview === false) {
-    //         return image
-    //     }
-    // })
-
-
-    // let previewImg
-
-    // if (previewImgArray) {
-    //     previewImg = previewImgArray[previewImgArray - 1]
-    // } else {
-    //     previewImg = {
-    //         url: null
-    //     }
-    // }
-
-
-    // const otherImage = (i) => {
-    //     if (!otherImage && !otherImage) return null
-    //     if (!otherImage[i] && !otherImagesArr[i]) {
-    //         return (
-    //             <img />
-    //         )
-    //     }
-    // }
-    //``````````````````````````````````
-
-    //``````````````````````````````````
 
 
     return spot && (
@@ -102,6 +94,7 @@ const SpotDetail = () => {
             <div className="star-review-container">
                 star review
             </div>
+            {noReviewsYet()}
         </div>
     )
 }

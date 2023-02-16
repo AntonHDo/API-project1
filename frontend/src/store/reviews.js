@@ -11,29 +11,28 @@ const loadReviews = (reviews) => {
     }
 }
 
-const loadCurrentReviews = (reviews) => {
-    return {
-        type: LOAD_CURRENT_REVIEWS,
-        reviews
-    }
-}
+// const loadCurrentReviews = (reviews) => {
+//     return {
+//         type: LOAD_CURRENT_REVIEWS,
+//         reviews
+//     }
+// }
 
 //get current user reviews
-export const getCurrentReviews = () => async dispatch => {
-    const response = await csrfFetch(`/api/reviews/current`);
-    if (response.ok) {
-        const list = await response.json()
-        dispatch(loadCurrentReviews(list))
-    }
-}
+// export const getCurrentReviews = () => async dispatch => {
+//     const response = await csrfFetch(`/api/reviews/current`);
+//     if (response.ok) {
+//         const list = await response.json()
+//         dispatch(loadCurrentReviews(list))
+//     }
+// }
 
 //get all reviews by spot id
 export const getReviews = (spotId) => async dispatch => {
     const response = await fetch(`/api/spots/${spotId}/reviews`);
-
     if (response.ok) {
-        const list = await response.json();
-        dispatch(loadReviews(list))
+        const reviews = await response.json();
+        dispatch(loadReviews(reviews))
     }
 }
 
@@ -84,13 +83,24 @@ export const removeReview = (reviewId) => async () => {
     return deleteReview
 }
 
+const initialState = {
+    spot: {},
+    user: {}
+}
 
-const reviewsReducer = (state = {}, action) => {
+const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_REVIEWS:
-            return { ...action.reviews.Reviews }
-        case LOAD_CURRENT_REVIEWS:
-            return { ...action.reviews.Reviews }
+            const spotReviews = {};
+            action.reviews.Reviews.forEach(review => {
+                spotReviews[review.id] = review
+            })
+            return {
+                spot: spotReviews,
+                user: { ...state.user }
+            }
+        // case LOAD_CURRENT_REVIEWS:
+        //     return { ...action.reviews.Reviews }
         default:
             return state;
     }
