@@ -32,7 +32,7 @@ const CurrentUserSpot = () => {
 
         // console.log("spot for handle click", spots.id)
         dispatch(deleteASpot(spot))
-
+        closeModal()
         history.push('/')
     }
 
