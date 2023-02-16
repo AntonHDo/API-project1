@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSpots, getDetailOfSpot } from "../../store/spots";
 import { useParams, useHistory } from "react-router-dom";
-import { getReviews } from "../../store/reviews"
+import { getReviews, removeReview } from "../../store/reviews"
 import './SpotDetail.css'
 import OpenModalButton from "../OpenModalButton";
-
+import { useModal } from "../../context/Modal";
 
 const SpotDetail = () => {
     const dispatch = useDispatch()
@@ -15,7 +15,7 @@ const SpotDetail = () => {
     const user = useSelector((state) => state.session.user)
     const getAllReviews = (state) => Object.values(state.reviews.spot)
     const reviews = useSelector(getAllReviews)
-
+    const { closeModal } = useModal
 
     let reviewChecker
     let reviewNum = spot?.numReviews
@@ -54,7 +54,6 @@ const SpotDetail = () => {
                     starRating =
                         <span>
                             <i className="fa-sharp fa-solid fa-star" />
-
                         </span>
                 }
                 if (review?.stars === 2) {
@@ -106,7 +105,14 @@ const SpotDetail = () => {
                                 <div>
                                     <OpenModalButton
                                         buttonText={"Delete"}
-                                        modalComponent={"delete update"}
+                                        modalComponent={
+                                            <>
+                                                <form onSubmit={handleSubmitForDelete}>
+                                                    <button type="submit" onClick={handleSubmitForDelete}>Yes (Delete Review)</button>
+                                                    <button type="submit" onClick={closeModal}>No (Keep Review)</button>
+                                                </form>
+                                            </>
+                                        }
                                     />
 
                                 </div>
@@ -114,10 +120,22 @@ const SpotDetail = () => {
                         )
                     }
                 }
-                return review && (
-                    <div>
-                        {review?.User?.firstName}
-                    </div>
+                return (
+                    <>
+                        <div>
+                            {review?.User?.firstName}
+                            {starRating}
+                        </div>
+                        <div>
+                            {dateCreated}
+                        </div>
+                        <div>
+                            {review.review}
+                        </div>
+                        <div>
+                            {reviewDeleteBtn()}
+                        </div>
+                    </>
                 )
             })
         }
@@ -131,7 +149,9 @@ const SpotDetail = () => {
                 <div>
                     <OpenModalButton
                         buttonText={"Post Your Review!"}
-                        modalComponent={"Will finish later"}
+                        modalComponent={
+                            <div></div>
+                        }
                     />
                 </div>
             )
@@ -147,10 +167,23 @@ const SpotDetail = () => {
 
 
     useEffect(() => {
-        dispatch(getDetailOfSpot(spotId))
-        dispatch(getReviews(spotId))
-    }, [dispatch])
+        const refresh = async () => {
 
+            await dispatch(getDetailOfSpot(spotId))
+            await dispatch(getReviews(spotId))
+        }
+        refresh()
+    }, [dispatch, spotId])
+
+
+
+    const handleSubmitForDelete = async (e) => {
+        e.preventDefault()
+
+        await dispatch(removeReview(spotId, reviews[0].id))
+        await dispatch(getDetailOfSpot(spotId))
+        closeModal()
+    }
 
 
 

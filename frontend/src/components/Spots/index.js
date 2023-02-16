@@ -13,7 +13,10 @@ const AllSpots = () => {
 
 
     useEffect(() => {
-        dispatch(getSpots())
+        const refresh = async () => {
+            await dispatch(getSpots())
+        }
+        refresh()
     }, [dispatch])
 
 
