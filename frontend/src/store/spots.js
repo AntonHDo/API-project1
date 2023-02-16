@@ -41,11 +41,14 @@ const editSpot = (editedSpot) => {
     }
 }
 
-const removeSpot = () => {
+const removeSpot = (spotId) => {
     return {
-        type: REMOVE_SPOT
+        type: REMOVE_SPOT,
+        spotId
     }
 }
+
+// export const currentSpots = state => state.spots.allSpots
 
 //get all spots
 export const getSpots = () => async dispatch => {
@@ -61,6 +64,7 @@ export const getCurrentUserSpot = () => async dispatch => {
     const response = await csrfFetch(`/api/spots/current`);
     if (response.ok) {
         const list = await response.json()
+        console.log("list from get current user spot:", list)
         dispatch(loadCurrentUserSpot(list))
     }
 }
@@ -100,7 +104,6 @@ export const createASpot = (data) => async (dispatch) => {
 }
 
 
-
 //create a image
 export const createImageForSpot = (spotId, image) => async () => {
     const newImg = await csrfFetch(`/api/spots/${spotId}/images`, {
@@ -132,40 +135,50 @@ export const editASpot = (spot, spotId) => async (dispatch) => {
 
 
 //delete a spot
-export const deleteASpot = (spotId) => async () => {
-    const deleteSpot = await csrfFetch(`/api/spots/${spotId}`, {
+export const deleteASpot = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: "DELETE"
     })
-    return deleteSpot
+    if (response.ok) {
+        dispatch(removeSpot(spotId))
+    }
 }
 
 
 //spots reducer
-const initialState = {}
+const initialState = {
+    allSpots: {},
+    singleSpot: {}
+}
+
 const spotsReducer = (state = initialState, action) => {
+    let newState = {}
     switch (action.type) {
         case LOAD_SPOTS:
-            const allSpots = {};
-            action.spots.Spots.forEach((spot) => (allSpots[spot.id] = spot))
-            return allSpots
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            action.spots.Spots.forEach((spot) => (newState.allSpots[spot.id] = spot))
+            return newState
         case ADD_SPOT:
-            const newSpot = { ...state }
-            newSpot[action.spot.id] = action.spot
-            return newSpot
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState.singleSpot = action.spot
+            return newState
         case LOAD_CURRENT_USER_SPOT:
-            const newState = {}
-            action.currentUserSpot.Spots.forEach((spot) => (newState[spot.id] = spot))
+            // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState = { allSpots: {} }
+            action.currentUserSpot.Spots.forEach((spot) => (newState.allSpots[spot.id] = spot))
             return newState
         case EDIT_SPOT:
-            const newEdit = { ...state }
-            newEdit[action.editedSpot.id] = action.editedSpot;
-            return newEdit
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState.singleSpot = action.editedSpot;
+            return newState
         case LOAD_SPOT_DETAILS:
-            const newSpotDetail = { ...state }
-            newSpotDetail[action.spot.id] = action.spot
-            return newSpotDetail
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState.singleSpot = action.spot
+            return newState
         case REMOVE_SPOT:
-            return initialState
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            delete newState.singleSpot
+            return newState
         default:
             return state;
     }

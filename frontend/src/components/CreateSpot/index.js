@@ -9,13 +9,13 @@ import './CreateSpot.css'
 const CreateSpot = () => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const spots = useSelector(state => state.spots)
+    const spots = useSelector(state => state.spots.singleSpot)
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
-    const [latitude, setLatitude] = useState('')
-    const [longitude, setLongitude] = useState('')
+    const [latitude, setLatitude] = useState(1)
+    const [longitude, setLongitude] = useState(1)
     const [description, setDescription] = useState('')
     const [name, setName] = useState('')
     const [price, setPrice] = useState(1)
@@ -34,24 +34,14 @@ const CreateSpot = () => {
         if (!address) errors['address'] = 'Address is required'
         if (!city) errors['city'] = 'City is required'
         if (!state) errors['state'] = 'State is required'
-        if (!latitude) errors['latitude'] = 'Latitude is required'
-        if (!longitude) errors['longitude'] = 'Longitude is required'
+        // if (!latitude) errors['latitude'] = 'Latitude is required'
+        // if (!longitude) errors['longitude'] = 'Longitude is required'
         if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
         if (!name) errors['name'] = 'Name is required'
         if (!price) errors['price'] = 'Price is required'
         // if (!previewImage) errors['previewImage'] = 'Preview image is required'
         // if (!imageURL.includes('.png')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
-        // if (!imageURL.includes('.jpg')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
-
-        // if (!imageURL.includes('.jpeg')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
-
-        // // || !imageURL.includes('.jpg', imageURL.lastIndexOf())
-        // // || !imageURL.includes('.jpeg', imageURL.lastIndexOf()))
-
-
-        // console.log("imageURL", imageURL.includes('.png', imageURL.lastIndexOf()))
-        // console.log("errors:", errors['imageURL'])
 
         if (Object.keys(errors).length > 0) {
             setErrors(errors)
@@ -68,16 +58,46 @@ const CreateSpot = () => {
             description: description,
             name: name,
             price: price,
-            previewImage: previewImage,
-            imageURL: imageURL,
-            imageURL2: imageURL2,
-            imageURL3: imageURL3,
-            imageURL4: imageURL4
         }
+
+        // const data = {
+        //     spot: {
+        //         country: country,
+        //         address: address,
+        //         city: city,
+        //         state: state,
+        //         lat: latitude,
+        //         lng: longitude,
+        //         description: description,
+        //         name: name,
+        //         price: price,
+        //     },
+        //     images: [{
+        //         preview: true,
+        //         url: previewImage,
+        //     },
+        //     {
+        //         preview: false,
+        //         url: imageURL
+        //     },
+        //     {
+        //         preview: false,
+        //         url: imageURL2
+        //     },
+        //     {
+        //         preview: false,
+        //         url: imageURL3
+        //     },
+        //     {
+        //         preview: false,
+        //         url: imageURL4
+        //     },
+        //     ]
+        // }
 
         dispatch(createASpot(data))
 
-        history.push('/')
+        history.push(`/spots/${spots.id}`)
     }
 
     // if (submit) {
@@ -117,7 +137,7 @@ const CreateSpot = () => {
                     <input type="text" placeholder="STATE" value={state} onChange={(e) => setState(e.target.value)} />
                     {errors['state'] && <div>{errors['state']}</div>}
                 </div>
-                <div className="lat-container">
+                {/* <div className="lat-container">
                     <div>Latitude</div>
                     <input type="number" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
                     {errors['latitude'] && <div>{errors['latitude']}</div>}
@@ -126,7 +146,7 @@ const CreateSpot = () => {
                     <div>Longitude</div>
                     <input type="number" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} />
                     {errors['longitude'] && <div>{errors['longitude']}</div>}
-                </div>
+                </div> */}
                 <hr></hr>
                 <h2>Describe your place to guests</h2>
                 <div>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>

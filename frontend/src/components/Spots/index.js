@@ -7,8 +7,9 @@ import { NavLink } from "react-router-dom";
 
 const AllSpots = () => {
     const dispatch = useDispatch()
-    const spots = useSelector(state => state.spots)
+    const spots = useSelector(state => state.spots.allSpots)
     const spotsArray = Object.values(spots)
+
 
 
     useEffect(() => {
@@ -30,6 +31,7 @@ const AllSpots = () => {
                                 <div className="roomDetails">
                                     <div className="roomData">
                                         <div className="spotLocationContainer">
+                                            <div>{spot.name}</div>
                                             <div className="spot-city">
                                                 {spot.city}, {spot.state}
                                                 <span className="starReview">

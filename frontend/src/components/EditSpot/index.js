@@ -13,21 +13,18 @@ const EditSpot = () => {
     const history = useHistory()
     const dispatch = useDispatch()
     const { spotId } = useParams()
-    const spot = useSelector(state => state.spots[spotId])
-    const [country, setCountry] = useState(spot?.country)
-    const [address, setAddress] = useState(spot?.address)
-    const [city, setCity] = useState(spot?.city)
-    const [state, setState] = useState(spot?.state)
-    const [latitude, setLatitude] = useState(spot?.lat)
-    const [longitude, setLongitude] = useState(spot?.lng)
-    const [description, setDescription] = useState(spot?.description)
-    const [name, setName] = useState(spot?.name)
+    const spot = useSelector(state => state.spots.allSpots)
+    console.log("spot from edit spot", spot[spotId])
+    const [country, setCountry] = useState(spot[spotId]?.country)
+    const [address, setAddress] = useState(spot[spotId]?.address)
+    const [city, setCity] = useState(spot[spotId]?.city)
+    const [state, setState] = useState(spot[spotId]?.state)
+    const [latitude, setLatitude] = useState(spot[spotId]?.lat)
+    const [longitude, setLongitude] = useState(spot[spotId]?.lng)
+    const [description, setDescription] = useState(spot[spotId]?.description)
+    const [name, setName] = useState(spot[spotId]?.name)
     const [price, setPrice] = useState(1)
     const [previewImage, setPreviewImage] = useState('')
-    const [imageURL, setImageURL] = useState('')
-    const [imageURL2, setImageURL2] = useState('')
-    const [imageURL3, setImageURL3] = useState('')
-    const [imageURL4, setImageURL4] = useState('')
     const [errors, setErrors] = useState({})
 
     const handleSubmit = (e) => {
@@ -72,19 +69,15 @@ const EditSpot = () => {
             name: name,
             price: price,
             previewImage: previewImage,
-            imageURL: imageURL,
-            imageURL2: imageURL2,
-            imageURL3: imageURL3,
-            imageURL4: imageURL4
         }
 
         dispatch(editASpot(data))
 
-        history.push(`/spots/${spot.id}`)
+        history.push(`/spots/${spot[spotId].id}`)
     }
 
 
-    return (
+    return spot && (
         <div className="form-container">
             <h1>Update your Spot</h1>
             <form className="spot-form"
@@ -111,7 +104,7 @@ const EditSpot = () => {
                     <input type="text" placeholder="STATE" value={state} onChange={(e) => setState(e.target.value)} />
                     {errors['state'] && <div>{errors['state']}</div>}
                 </div>
-                <div className="lat-container">
+                {/* <div className="lat-container">
                     <div>Latitude</div>
                     <input type="number" placeholder="Latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
                     {errors['latitude'] && <div>{errors['latitude']}</div>}
@@ -120,7 +113,7 @@ const EditSpot = () => {
                     <div>Longitude</div>
                     <input type="number" placeholder="Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)} />
                     {errors['longitude'] && <div>{errors['longitude']}</div>}
-                </div>
+                </div> */}
                 <hr></hr>
                 <h2>Describe your place to guests</h2>
                 <div>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>
@@ -150,13 +143,13 @@ const EditSpot = () => {
                     <input type="text" placeholder="Preview Image URL" value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} />
                     {errors['previewImage'] && <div>{errors['previewImage']}</div>}
                 </div>
-                <div className="img-container">
-                    <input type="text" placeholder="Image URL" value={imageURL} onChange={(e) => setImageURL(e.target.value)} />
+                {/* <div className="img-container"> */}
+                {/* <input type="text" placeholder="Image URL" value={imageURL} onChange={(e) => setImageURL(e.target.value)} />
                     {errors['imageURL'] && <div>{errors['imageURL']}</div>}
                 </div>
                 <input type="text" placeholder="Image URL" value={imageURL2} onChange={(e) => setImageURL2(e.target.value)} />
                 <input type="text" placeholder="Image URL" value={imageURL3} onChange={(e) => setImageURL3(e.target.value)} />
-                <input type="text" placeholder="Image URL" value={imageURL4} onChange={(e) => setImageURL4(e.target.value)} />
+                <input type="text" placeholder="Image URL" value={imageURL4} onChange={(e) => setImageURL4(e.target.value)} /> */}
 
                 <hr></hr>
                 <button className="createSpot" type="submit">Update Spot</button>

@@ -9,8 +9,9 @@ const SpotDetail = () => {
     const dispatch = useDispatch()
     const history = useHistory()
     const { spotId } = useParams();
-    const spots = useSelector((state) => state.spots)
-    const spotsArray = Object.values(spots)
+    const spot = useSelector((state) => state.spots.singleSpot)
+
+    console.log("spotid from spot detail:", spotId)
 
     useEffect(() => {
         dispatch(getDetailOfSpot(spotId))
@@ -19,16 +20,17 @@ const SpotDetail = () => {
     // useEffect(() => {
     //     dispatch(getSpots(spotId))
     // }, [dispatch])
-    const currentSpot = spots[spotId]
-    return currentSpot && (
+
+    return spot && (
         <div className="spotsDetailPage">
-            {/* {currentSpot.ownerId === sessionStorage.user.id && ()} */}
-            <h2>{currentSpot.name}</h2>
+            <h2>{spot.name}</h2>
             <div className="location-container">
-                City, State, Country
+                {spot.city}, {spot.state}, {spot.country}
             </div>
             <div className="previewImg">
-                {/* {spots[spotId].SpotImages[0].url} */}
+                {/* {spotImages.map(image => (
+                    <img key={image.id} src={image.url} />
+                ))} */}
             </div>
             <hr></hr>
             <div className="info-container">
