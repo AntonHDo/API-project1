@@ -1,10 +1,10 @@
-.eachSpot {
+/* .eachSpot {
   display: flex;
   flex-wrap: wrap;
   margin: 1rem;
-}
+} */
 
-.spotImg {
+/* .spotImg {
   flex-wrap: wrap;
   width: 270px;
   height: 250px;
@@ -23,4 +23,4 @@
 
 .spotLocationContainer {
   margin-right: 10px
-}
+} */

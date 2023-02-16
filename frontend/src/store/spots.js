@@ -54,8 +54,8 @@ const removeSpot = (spotId) => {
 export const getSpots = () => async dispatch => {
     const response = await fetch(`/api/spots`);
     if (response.ok) {
-        const list = await response.json()
-        dispatch(loadSpots(list))
+        const spot = await response.json()
+        dispatch(loadSpots(spot))
     }
 }
 
@@ -63,26 +63,19 @@ export const getSpots = () => async dispatch => {
 export const getCurrentUserSpot = () => async dispatch => {
     const response = await csrfFetch(`/api/spots/current`);
     if (response.ok) {
-        const list = await response.json()
-        console.log("list from get current user spot:", list)
-        dispatch(loadCurrentUserSpot(list))
+        const spot = await response.json()
+
+        dispatch(loadCurrentUserSpot(spot))
     }
 }
 
-//get detail of a spot
-// export const getDetailOfSpot = (spotId) => async dispatch => {
-//     const response = await fetch(`/api/spots/${spotId}`);
-//     if (response.ok) {
-//         const list = await response.json();
-//         dispatch(loadSpots(list));
-//     }
-// }
+
 export const getDetailOfSpot = (spotId) => async dispatch => {
     const response = await fetch(`/api/spots/${spotId}`);
     if (response.ok) {
-        const list = await response.json();
-
-        dispatch(loadSpotDetails(list));
+        const spot = await response.json();
+        dispatch(loadSpotDetails(spot));
+        return spot
     }
 }
 
@@ -104,7 +97,7 @@ export const createASpot = (data) => async (dispatch) => {
 }
 
 
-//create a image
+//create an image
 export const createImageForSpot = (spotId, image) => async () => {
     const newImg = await csrfFetch(`/api/spots/${spotId}/images`, {
         method: "POST",
@@ -172,12 +165,13 @@ const spotsReducer = (state = initialState, action) => {
             newState.singleSpot = action.editedSpot;
             return newState
         case LOAD_SPOT_DETAILS:
-            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState = { ...state }
             newState.singleSpot = action.spot
             return newState
         case REMOVE_SPOT:
             newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
-            delete newState.singleSpot
+            delete newState.allSpots[action.spotId]
             return newState
         default:
             return state;

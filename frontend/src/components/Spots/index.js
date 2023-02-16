@@ -16,10 +16,10 @@ const AllSpots = () => {
         dispatch(getSpots())
     }, [dispatch])
 
+
     return (
         <div className="spotsPage">
             <div className="eachSpot">
-
                 {spotsArray.map(spot => (
                     <div
                         className='spotCard' key={spot.id}>
@@ -31,16 +31,25 @@ const AllSpots = () => {
                                 <div className="roomDetails">
                                     <div className="roomData">
                                         <div className="spotLocationContainer">
-                                            <div>{spot.name}</div>
+                                            <h3>{spot.name}</h3>
                                             <div className="spot-city">
                                                 {spot.city}, {spot.state}
-                                                <span className="starReview">
-                                                    <i className="fa-sharp fa-solid fa-star"></i>
-                                                    <span>{spot.avgRating}</span>
-                                                </span>
-                                                <div><b>${spot.price}</b> <span>night</span></div>
-                                            </div>
 
+                                            </div>
+                                            <div className="price-per-night">
+                                                <h3>
+                                                    $
+                                                    {spot.price}
+                                                </h3>
+                                                <span>night</span>
+
+                                            </div>
+                                        </div>
+                                        <div className="star-container">
+                                            <span className="starReview">
+                                                <i className="fa-sharp fa-solid fa-star"></i>
+                                                <span>{spot.avgRating}</span>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +58,7 @@ const AllSpots = () => {
                     </div>
                 ))}
             </div>
-        </div>
+        </div >
     )
 }
 export default AllSpots
