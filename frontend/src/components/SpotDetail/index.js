@@ -11,15 +11,57 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
 
-    // console.log("spotid from spot detail:", spotId)
+
 
     useEffect(() => {
-        dispatch(getDetailOfSpot(spotId))
-    }, [dispatch])
+        const restoreSpot = async () => {
+            dispatch(getDetailOfSpot(spotId))
+        }
+        restoreSpot()
+    }, [dispatch, spotId])
 
-    // useEffect(() => {
-    //     dispatch(getSpots(spotId))
-    // }, [dispatch])
+
+
+    let previewImgArray
+    if (spot.SpotImages?.length > 0) {
+        previewImgArray = spot.SpotImages.filter((image) => {
+            if (image.preview === true) {
+                return image
+            }
+        })
+    }
+
+    let otherImagesArr = spot?.SpotImages?.filter((image) => {
+        if (image.preview === false) {
+            return image
+        }
+    })
+
+
+
+
+    let previewImg
+
+    if (previewImgArray) {
+        previewImg = previewImgArray[previewImgArray - 1]
+    } else {
+        previewImg = {
+            url: null
+        }
+    }
+
+
+    const otherImage = (i) => {
+        if (!otherImage && !otherImage) return null
+        if (!otherImage[i] && !otherImagesArr[i]) {
+            return (
+                <img />
+            )
+        }
+    }
+
+    // console.log("otherimage:", otherImage(1))
+
 
     return spot && (
         <div className="spotsDetailPage">
@@ -28,15 +70,21 @@ const SpotDetail = () => {
                 {spot.city}, {spot.state}, {spot.country}
             </div>
             <div className="previewImg">
-                {/* {spotImages.map(image => (
-                    <img key={image.id} src={image.url} />
-                ))} */}
+                <div className="preview-image-left">
+                    {previewImgArray && <img src={previewImgArray[0].url} />}
+                </div>
+                <div className="preview-image-right">
+                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
+                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
+                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
+                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
+                </div>
             </div>
             <hr></hr>
             <div className="info-container">
-                {/* <div>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</div> */}
+                <div>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</div>
                 <div className="price-reserve-container">
-                    <div>${spot.price} night,    {spot.avgStarRating}, {spot.numReviews}</div>
+                    <div>${spot?.price} night,    {spot?.avgStarRating}, {spot?.numReviews}</div>
                     <button>Reserve</button>
                 </div>
             </div>

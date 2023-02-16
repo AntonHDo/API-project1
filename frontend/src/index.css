@@ -1,1 +1,238 @@
 /* TODO Add site wide styles */
+
+
+.site-button {
+  color: white;
+  border-radius: 25px;
+  border: none;
+  padding: 0.4em 1.2em;
+  display: flex;
+  align-items: center;
+  background: #ff385c;
+  cursor: pointer;
+}
+
+.site-button a {
+  color: white;
+}
+
+.site-button span i {
+  transition: transform 0.3s ease-out;
+}
+
+.site-button span {
+  margin-right: 5px;
+  color: white;
+}
+
+.site-button:hover i {
+  transform: rotate(180deg);
+}
+
+
+body {
+  background: #ffffff;
+  font-family: 'Matter', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: #2c2c2c;
+  transition: color 0.3s ease-out;
+}
+
+/* Navbar.css */
+
+header {
+  margin-bottom: 150px;
+}
+
+.nav-bar {
+  position: fixed;
+  width: 90%;
+  overflow: visible;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  margin: 0;
+  padding: 1% 35px;
+  background: #fff;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+
+  /* comment out for debugging */
+  overflow: hidden;
+  width: 100%;
+}
+
+.nav-bar .demologo {
+  max-width: 70px;
+  height: auto;
+  position: absolute;
+  bottom: -17px;
+  transition: transform 0.3s ease-out;
+  transform-origin: 100% 100%;
+  transform: translateY(20%);
+}
+
+.nav-bar .demologo:hover {
+  transform: translateY(0);
+}
+
+/* End of Navbar.css */
+
+/* Form.css */
+
+.form-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 0 2vw 5vw;
+
+}
+
+.form-container .spot-form input {
+  width: 100%;
+  padding: 5px;
+  margin: 0 0 10px;
+}
+
+button.createSpot {
+  padding: .9em 3em;
+  border-radius: 20px;
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  background: #FF385C;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+button.createSpot:hover {
+  transform: scale(1.05);
+  background: #2c2c2c;
+}
+
+.form-error {
+  margin: -5px 0 10px;
+  color: rgb(226, 2, 2);
+}
+
+.form-description {
+  margin-bottom: 10px;
+}
+
+.price-container span {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.price-container span b {
+  margin-right: 10px;
+}
+
+.price-container span input {
+
+  margin-left: 5px;
+  margin-bottom: 0 !important;
+}
+
+/* End of Form.css */
+
+
+
+h3 {
+  font-family: 'matter', sans-serif;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* spots.css */
+
+.spotsPage {
+  margin: auto auto;
+}
+
+.eachSpot {
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 1400px;
+  padding: 0 5%;
+  margin: auto;
+}
+
+.eachSpot .spotCard {
+  margin: 10px 5px;
+  overflow: hidden;
+  height: 100%;
+  transition: all 0.3s ease-out;
+}
+
+.spotCard .room .imgDiv {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/3;
+  border-radius: 10px;
+}
+
+.spotCard .room .imgDiv img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spot-city {
+  color: #717171;
+  margin: 5px 0 2px;
+}
+
+.roomData {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.starReview {
+  transition: color 0.3s ease-out;
+}
+
+.starReview:hover {
+  color: #ffa500;
+}
+
+.price-per-night {
+  display: flex;
+  align-items: flex-start;
+}
+
+
+.price-per-night span {
+  margin-left: 5px;
+}
+
+/* Spots detail css */
+.previewImg {
+  display: flex;
+  border: solid 1px cyan;
+  overflow: hidden;
+}
+
+.previewImg .preview-image-right {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.previewImg .preview-image-right img {
+  width: 100%;
+  object-fit: cover;
+}
+
+
+
+
+/* end of spots detail css */

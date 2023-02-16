@@ -1,7 +1,12 @@
+/* .spotsPage {
+    max-width: 1400px;
+    margin: auto;
+}
+
 .eachSpot {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    place-items: center;
 }
 
 .spotImg {
@@ -22,5 +27,5 @@
 }
 
 .spotLocationContainer {
-    margin-right: 10px
-}
+    margin-right: 10px;
+} */
