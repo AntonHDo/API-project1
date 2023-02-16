@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { getDetailOfSpot } from "../../store/spots";
 import { createASpot } from "../../store/spots";
 import { createImageForSpot } from "../../store/spots";
 import './CreateSpot.css'
@@ -9,7 +10,8 @@ import './CreateSpot.css'
 const CreateSpot = () => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const spots = useSelector(state => state.spots.singleSpot)
+
+    const spots = useSelector(state => state.spots?.singleSpot)
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
@@ -25,6 +27,7 @@ const CreateSpot = () => {
     const [imageURL3, setImageURL3] = useState('')
     const [imageURL4, setImageURL4] = useState('')
     const [errors, setErrors] = useState({})
+
 
 
     const handleSubmit = (e) => {

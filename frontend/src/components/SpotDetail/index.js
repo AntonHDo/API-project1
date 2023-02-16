@@ -21,43 +21,42 @@ const SpotDetail = () => {
         restoreSpot()
     }, [dispatch, spotId])
 
-    console.log()
 
-    let previewImgArray
-    if (spot?.SpotImages?.length > 0) {
-        previewImgArray = spot.SpotImages.filter((image) => {
-            if (image.preview === true) {
-                return image
-            }
-        })
-    }
+    // let previewImgArray
+    // if (spot.SpotImages.length > 0) {
+    //     previewImgArray = spot.SpotImages.filter((image) => {
+    //         if (image.preview === true) {
+    //             return image
+    //         }
+    //     })
+    // }
 
-    let otherImagesArr = spot?.SpotImages?.filter((image) => {
-        if (image.preview === false) {
-            return image
-        }
-    })
-
-
-    let previewImg
-
-    if (previewImgArray) {
-        previewImg = previewImgArray[previewImgArray - 1]
-    } else {
-        previewImg = {
-            url: null
-        }
-    }
+    // let otherImagesArr = spot?.SpotImages?.filter((image) => {
+    //     if (image.preview === false) {
+    //         return image
+    //     }
+    // })
 
 
-    const otherImage = (i) => {
-        if (!otherImage && !otherImage) return null
-        if (!otherImage[i] && !otherImagesArr[i]) {
-            return (
-                <img />
-            )
-        }
-    }
+    // let previewImg
+
+    // if (previewImgArray) {
+    //     previewImg = previewImgArray[previewImgArray - 1]
+    // } else {
+    //     previewImg = {
+    //         url: null
+    //     }
+    // }
+
+
+    // const otherImage = (i) => {
+    //     if (!otherImage && !otherImage) return null
+    //     if (!otherImage[i] && !otherImagesArr[i]) {
+    //         return (
+    //             <img />
+    //         )
+    //     }
+    // }
     //``````````````````````````````````
 
     //``````````````````````````````````
@@ -69,9 +68,14 @@ const SpotDetail = () => {
             <div className="location-container">
                 {spot.city}, {spot.state}, {spot.country}
             </div>
+
             <div className="previewImg">
                 <div className="preview-image-left">
-                    {previewImgArray && <img src={previewImgArray[0].url} />}
+                    {spot.SpotImages?.map(image => (
+                        <div key={image.id}>
+                            <img src={image.url} />
+                        </div>
+                    ))}
                 </div>
                 <div className="preview-image-right">
                     {/* <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
