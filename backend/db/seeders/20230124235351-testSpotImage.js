@@ -14,6 +14,26 @@ module.exports = {
       preview: true
     },
     {
+      spotId: 1,
+      url: "https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg",
+      preview: false
+    },
+    {
+      spotId: 1,
+      url: "https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg",
+      preview: false
+    },
+    {
+      spotId: 1,
+      url: "https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg",
+      preview: false
+    },
+    {
+      spotId: 1,
+      url: "https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg",
+      preview: false
+    },
+    {
       spotId: 2,
       url: "https://a0.muscache.com/im/pictures/miso/Hosting-690516171990861652/original/c62c016f-4f44-4a20-bb16-2c888d81eb4e.jpeg?im_w=720",
       preview: true

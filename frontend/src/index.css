@@ -60,8 +60,8 @@ header {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
 
   /* comment out for debugging */
-  overflow: hidden;
-  width: 100%;
+  /* overflow: hidden;
+  width: 100%; */
 }
 
 .nav-bar .demologo {
@@ -220,6 +220,17 @@ h3 {
   display: flex;
   border: solid 1px cyan;
   overflow: hidden;
+}
+
+.previewImg .preview-image-left {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.previewImg .preview-image-left img {
+  width: 100%;
+
+  object-fit: cover;
 }
 
 .previewImg .preview-image-right {
