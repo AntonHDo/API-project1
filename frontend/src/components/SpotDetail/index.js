@@ -11,7 +11,7 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
 
-    console.log("spotid from spot detail:", spotId)
+    // console.log("spotid from spot detail:", spotId)
 
     useEffect(() => {
         dispatch(getDetailOfSpot(spotId))
@@ -34,9 +34,9 @@ const SpotDetail = () => {
             </div>
             <hr></hr>
             <div className="info-container">
-                <div>Hosted by Firstname Lastname</div>
+                {/* <div>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</div> */}
                 <div className="price-reserve-container">
-                    <div>price    star review</div>
+                    <div>${spot.price} night,    {spot.avgStarRating}, {spot.numReviews}</div>
                     <button>Reserve</button>
                 </div>
             </div>
