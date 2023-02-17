@@ -11,7 +11,6 @@ const AllSpots = () => {
     const spotsArray = Object.values(spots)
 
 
-
     useEffect(() => {
         const refresh = async () => {
             await dispatch(getSpots())
@@ -51,7 +50,7 @@ const AllSpots = () => {
                                         <div className="star-container">
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
-                                                <span>{spot?.avgRating}</span>
+                                                <span>{spot?.avgRating?.toFixed(1)}</span>
                                             </span>
                                         </div>
                                     </div>

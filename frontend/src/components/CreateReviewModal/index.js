@@ -20,38 +20,38 @@ const CreateReviewModal = ({ id }) => {
   const [btnClassName, setBtnClassName] = useState("disabled")
 
 
-  // useEffect(() => {
-  //   if (review.length < 10) {
-  //     setDisableBtn(true)
-  //     setBtnClassName("disabled")
-  //     return
-  //   }
-  //   if (stars === 0) {
-  //     setDisableBtn(true)
-  //     setBtnClassName("disabled")
-  //     return
-  //   }
-  //   setBtnClassName("enabled")
-  //   setDisableBtn(false)
-  // }, [review, stars])
+  useEffect(() => {
+    if (review.length < 10) {
+      setDisableBtn(true)
+      setBtnClassName("disabled")
+      return
+    }
+    if (stars === 0) {
+      setDisableBtn(true)
+      setBtnClassName("disabled")
+      return
+    }
+    setBtnClassName("enabled")
+    setDisableBtn(false)
+  }, [review, stars])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // setErrors([])
-    // setReviewError(false)
-    // setStarError(false)
+    setErrors([])
+    setReviewError(false)
+    setStarError(false)
 
-    // if (review.length < 10) {
-    //   errors.push('Input Error')
-    //   setReviewError(true)
-    // }
+    if (review.length < 10) {
+      errors.push('Input Error')
+      setReviewError(true)
+    }
 
-    // if (stars === 0) {
-    //   errors.push('Input Error')
-    //   setStarError(true)
-    // }
-    // if (errors.length > 0) return
+    if (stars === 0) {
+      errors.push('Input Error')
+      setStarError(true)
+    }
+    if (errors.length > 0) return
 
 
 
@@ -103,7 +103,7 @@ const CreateReviewModal = ({ id }) => {
           Stars
         </div >
         <div>
-          <button className={btnClassName} type="submit" onClick={handleSubmit} >Submit Your Review</button>
+          <button className={btnClassName} type="submit" onClick={handleSubmit} disabled={disableBtn} >Submit Your Review</button>
         </div>
       </form >
     </div >

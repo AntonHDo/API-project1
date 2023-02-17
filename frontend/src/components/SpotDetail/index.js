@@ -185,7 +185,7 @@ const SpotDetail = () => {
             )
         } else {
             return (
-                <div>{reviewNum} {reviewChecker}</div>
+                <div>· {reviewNum} {reviewChecker}</div>
             )
         }
     }
@@ -238,13 +238,23 @@ const SpotDetail = () => {
             <hr></hr>
             <div className="info-container">
                 <h2>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</h2>
+                <div>{spot.description}</div>
                 <div className="price-reserve-container">
+                    <br></br>
                     <div>
                         $
                         {spot?.price}
-                        night,
-                        {spot.avgStarRating},
-                        {spot?.numReviews}
+                        night
+
+                    </div>
+                    {/* {spot.avgStarRating} · */}
+                    <div>
+                        <div>
+
+                            <i className="fa-sharp fa-solid fa-star" />
+                            {avgStarPercent()}
+                            {checkNewReview()}
+                        </div>
                     </div>
                     <button className="site-button">Reserve</button>
                 </div>
@@ -253,10 +263,10 @@ const SpotDetail = () => {
             <div className="star-review-container">
                 <i className="fa-sharp fa-solid fa-star" />
             </div>
+            {avgStarPercent()}
             {checkNewReview()}
             <div>
                 {reviewBtb()}
-                {avgStarPercent()}
                 {noReviewsYet()}
             </div>
             <div>

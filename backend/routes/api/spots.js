@@ -288,7 +288,7 @@ router.get('/:spotId', async (req, res) => {
     for (let review of spotJSON.Reviews) {
         num = num + review.stars
     }
-    spotJSON.avgStarRating = num / spotJSON.numReviews
+    spotJSON.avgStarRating = num / spotJSON.numReviews.toFixed(1)
     delete spotJSON.Reviews
 
     if (spotJSON.SpotImages.length > 1) {
