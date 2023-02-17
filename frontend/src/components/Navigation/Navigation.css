@@ -1,4 +1,4 @@
-.profile-dropdown {
+/* .profile-dropdown {
     position: absolute;
     right: 20px;
     top: 60px;
@@ -12,41 +12,39 @@
     background-color: white;
     z-index: 1;
 
-}
+} */
 
-.nav-bar {
+/* .nav-bar {
     display: flex;
     justify-content: space-between;
     margin-right: 55px;
     border-color: #585858;
-}
+} */
 
-.dropListBtn {
+/* .dropListBtn {
     cursor: pointer;
     height: 30px;
     display: flex;
     align-items: center;
-}
+} */
 
-.profileBtnContainer {
+/* .profileBtnContainer {
     display: flex;
     flex-direction: row;
     height: 100%;
     align-items: center;
     justify-content: center;
-    /* width: 40px;
-    margin-right: 100px; */
-}
+} */
 
-.profile-btn {
+/* .profile-btn {
     border-radius: 25px;
-}
+} */
 
-.hidden {
+/* .hidden {
     display: none;
-}
+} */
 
-.fa-bars {
+/* .fa-bars {
     font-size: 20px;
     margin-right: 5px;
     margin-left: 5px;
@@ -55,9 +53,9 @@
     margin-left: 9px;
     margin-right: 9px;
     font-family: "Font Awesome 6 Free";
-}
+} */
 
-.fa-user-circle {
+/* .fa-user-circle {
     font-size: 30px;
     padding-right: 10px;
     margin-top: 10px;
@@ -66,37 +64,37 @@
     height: 40px;
     width: 10px;
 
-}
+} */
 
-.user-box-container {
+/* .user-box-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-right: 2px;
 
-}
+} */
 
-.demologo {
+/* .demologo {
     max-width: 100%;
     height: auto;
     width: 100px;
     height: 100px;
     margin-right: 10px;
 
-}
+} */
 
-ul {
+/* ul {
     display: flex;
     list-style-type: none;
-}
+} */
 
-.create-spot-link {
+/* .create-spot-link {
     margin-right: 2rem;
     white-space: nowrap;
     font-size: 24px;
     margin-top: 5px;
     text-decoration: none;
-}
+} */
 
 
 .nav-bar-bottom {

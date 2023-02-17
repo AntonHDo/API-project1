@@ -64,9 +64,10 @@ export const getCurrentUserSpot = () => async dispatch => {
     const response = await csrfFetch(`/api/spots/current`);
     if (response.ok) {
         const spot = await response.json()
-
         dispatch(loadCurrentUserSpot(spot))
+        return spot
     }
+    return response
 }
 
 
@@ -80,18 +81,34 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
 }
 
 //create a spot
-export const createASpot = (data, image, owner) => async (dispatch) => {
+export const createASpot = (data, image) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data, image)
+        body: JSON.stringify(data)
     });
     if (response.ok) {
         const newSpot = await response.json();
 
-        console.log("new spot from create a spot", image)
+        newSpot['SpotImages'] = [];
+        for (let i = 0; i < image.length; i++) {
+            let response2 = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(image[i])
+            })
+            if (response2.ok) {
+                let oneImage = await response2.json()
+                newSpot.SpotImages.push(oneImage)
+                console.log("new spot from create a spot", newSpot.SpotImages)
+            }
+        }
+
+        // console.log("new spot from create a spot", image)
         dispatch(addSpot(newSpot))
         return newSpot
     }
@@ -154,14 +171,22 @@ const spotsReducer = (state = initialState, action) => {
             action.spots.Spots.forEach((spot) => (newState.allSpots[spot.id] = spot))
             return newState
         case ADD_SPOT:
-            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
-            newState.singleSpot = action.spot
+            // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
+            newState = { ...state, allSpots: { ...state.allSpots, ...action.spot }, singleSpot: { ...state.spot, ...action.spot } }
+            newState.allSpots['previewImage'] = action.spot.SpotImages[0].url
+            console.log("new state from the reducer:", newState)
+            delete newState.allSpots.SpotImages
             return newState
         case LOAD_CURRENT_USER_SPOT:
-            // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
-            newState = { allSpots: {} }
+            newState = { allSpots: {} };
             action.currentUserSpot.Spots.forEach((spot) => (newState.allSpots[spot.id] = spot))
             return newState
+        // let allSpots = { ...newState };
+        // newState = { allSpot: {} };
+        // action.currentUserSpot.Spots.forEach(spot => newState[spot.id] = spot)
+        // let allSpots = { ...newState }
+        // console.log("newstate from reducer", action.currentUserSpot)
+        // return allSpots
         case EDIT_SPOT:
             newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
             newState.singleSpot = action.editedSpot;

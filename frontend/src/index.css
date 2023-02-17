@@ -1,15 +1,59 @@
 /* TODO Add site wide styles */
 
+:root {
+  --grey: #717171;
+  --pink: #FF385C;
+}
 
+
+/* general styles */
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+ul,
+li,
+label,
+input {
+  color: #2c2c2c
+}
+
+li {
+  list-style: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* end of general styles */
 .site-button {
   color: white;
   border-radius: 25px;
   border: none;
-  padding: 0.4em 1.2em;
   display: flex;
   align-items: center;
   background: #ff385c;
   cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 21px;
+  transition: box-shadow 0.2s ease-out, background 0.2s ease-out;
+  justify-content: center;
+}
+
+.form-button {
+  margin-top: 20px;
+}
+
+.site-button:hover {
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, .2);
+  background: #2c2c2c;
 }
 
 .site-button a {
@@ -42,40 +86,123 @@ a {
 }
 
 /* Navbar.css */
+/* navigation */
 
 header {
+  /* adds gap so cards and anything past doesn't overflow */
   margin-bottom: 150px;
 }
 
-.nav-bar {
+nav {
+  display: flex;
   position: fixed;
-  width: 90%;
-  overflow: visible;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 10;
   margin: 0;
-  padding: 1% 35px;
+  padding: 0 35px 0;
   background: #fff;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
-
-  /* comment out for debugging */
-  /* overflow: hidden;
-  width: 100%; */
 }
 
-.nav-bar .demologo {
+.nav-bar {
+  margin-left: auto;
+  position: relative;
+}
+
+.homeBtn {
+  margin-top: auto;
+  display: block;
+  position: relative;
+  width: 70px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.site-logo {
+  height: 50px;
+}
+
+.demologo {
   max-width: 70px;
-  height: auto;
   position: absolute;
-  bottom: -17px;
+  bottom: 0;
   transition: transform 0.3s ease-out;
-  transform-origin: 100% 100%;
   transform: translateY(20%);
 }
 
-.nav-bar .demologo:hover {
+.homeBtn:hover .demologo {
   transform: translateY(0);
+}
+
+.profileBtnContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-btn {
+  padding: 5px 5px 5px 12px;
+  border-radius: 21px;
+  background: white;
+  border: solid 1px rgba(0, 0, 0, .2);
+  transition: box-shadow 0.2s ease-out;
+}
+
+.profile-btn:hover {
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, .2);
+}
+
+.user-box-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px
+}
+
+.fa-user-circle {
+  font-size: 2rem;
+  color: var(--grey);
+}
+
+.fa-bars {
+  font-size: 1rem;
+}
+
+.profile-dropdown {
+  margin-top: 10px;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  width: 30vw;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 2px 2px 6px 2px rgba(0, 0, 0, .2);
+  transition: all 0.3s ease-out;
+  transform: translateY(0);
+  max-width: 300px;
+}
+
+.profile-dropdown.hidden {
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  transform: translateY(-5%);
+}
+
+.profile-dropdown li {
+  cursor: pointer;
+  transition: background 0.2s ease-out, color 0.2s ease-out;
+  margin: 10px 0;
+}
+
+.profile-dropdown nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-dropdown li:hover {
+  color: #FF385C;
 }
 
 /* End of Navbar.css */
@@ -218,7 +345,6 @@ h3 {
 /* Spots detail css */
 .previewImg {
   display: flex;
-  border: solid 1px cyan;
   overflow: hidden;
 }
 

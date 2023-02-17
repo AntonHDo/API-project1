@@ -20,29 +20,29 @@ const AllSpots = () => {
     }, [dispatch])
 
 
-    return (
+    return spotsArray && spots && (
         <div className="spotsPage">
             <div className="eachSpot">
-                {spotsArray.map(spot => (
+                {spotsArray?.map((spot) => (
                     <div
-                        className='spotCard' key={spot.id}>
-                        <NavLink to={`/spots/${spot.id}`}>
+                        className='spotCard' key={spot?.id}>
+                        <NavLink to={`/spots/${spot?.id}`}>
                             <div className="room">
                                 <div className="imgDiv">
-                                    <img className="spotImg" src={spot.previewImage}></img>
+                                    <img className="spotImg" src={spot?.previewImage}></img>
                                 </div>
                                 <div className="roomDetails">
                                     <div className="roomData">
                                         <div className="spotLocationContainer">
-                                            <h3>{spot.name}</h3>
+                                            <h3>{spot?.name}</h3>
                                             <div className="spot-city">
-                                                {spot.city}, {spot.state}
+                                                {spot?.city}, {spot?.state}
 
                                             </div>
                                             <div className="price-per-night">
                                                 <h3>
                                                     $
-                                                    {spot.price}
+                                                    {spot?.price}
                                                 </h3>
                                                 <span>night</span>
 
@@ -51,7 +51,7 @@ const AllSpots = () => {
                                         <div className="star-container">
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
-                                                <span>{spot.avgRating}</span>
+                                                <span>{spot?.avgRating?.toFixed(1)}</span>
                                             </span>
                                         </div>
                                     </div>

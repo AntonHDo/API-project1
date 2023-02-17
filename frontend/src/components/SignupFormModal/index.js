@@ -36,7 +36,7 @@ function SignupFormModal() {
                 <ul>
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                 </ul>
-                <label>
+                <label className="signup-label">
                     Email
                     <input
                         type="text"
@@ -45,7 +45,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="signup-label">
                     Username
                     <input
                         type="text"
@@ -54,7 +54,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="signup-label">
                     First Name
                     <input
                         type="text"
@@ -63,7 +63,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="signup-label">
                     Last Name
                     <input
                         type="text"
@@ -72,7 +72,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="signup-label">
                     Password
                     <input
                         type="password"
@@ -81,7 +81,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="signup-label">
                     Confirm Password
                     <input
                         type="password"
@@ -90,7 +90,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <button type="submit">Sign Up</button>
+                <button className="form-button site-button" type="submit">Sign Up</button>
             </form>
         </>
     );

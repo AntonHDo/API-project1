@@ -5,10 +5,9 @@ import { useHistory } from "react-router-dom";
 import { createASpot } from "../../store/spots";
 import './CreateSpot.css'
 
-const CreateSpot = () => {
+const CreateSpot = ({ id }) => {
     const dispatch = useDispatch()
     const history = useHistory()
-
     const spots = useSelector(state => state.spots?.singleSpot)
     const user = useSelector(state => state.session)
     const [country, setCountry] = useState('')
@@ -29,7 +28,7 @@ const CreateSpot = () => {
 
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const errors = {}
         if (!country) errors['country'] = 'Country is required'
@@ -63,76 +62,49 @@ const CreateSpot = () => {
         }
 
         const image = []
-        if (previewImage)
-            image.push({
-                url: previewImage,
-                preview: true
-            })
-        if (imageURL)
-            image.push({
-                url: imageURL,
-                preview: false
-            })
-        if (imageURL2)
-            image.push({
-                url: imageURL2,
-                preview: false
-            })
-        if (imageURL3)
-            image.push({
-                url: imageURL3,
-                preview: false
-            })
-        if (imageURL4)
-            image.push({
-                url: imageURL4,
-                preview: false
-            })
 
-        const owner = {
-            firstName: user.firstName,
-            lastName: user.lastName
+        const firstImage = {
+            url: previewImage,
+            preview: true
         }
 
-        // const data = {
-        //     spot: {
-        //         country: country,
-        //         address: address,
-        //         city: city,
-        //         state: state,
-        //         lat: latitude,
-        //         lng: longitude,
-        //         description: description,
-        //         name: name,
-        //         price: price,
-        //     },
-        //     images: [{
-        //         preview: true,
-        //         url: previewImage,
-        //     },
-        //     {
-        //         preview: false,
-        //         url: imageURL
-        //     },
-        //     {
-        //         preview: false,
-        //         url: imageURL2
-        //     },
-        //     {
-        //         preview: false,
-        //         url: imageURL3
-        //     },
-        //     {
-        //         preview: false,
-        //         url: imageURL4
-        //     },
-        //     ]
-        // }
+        image.push(firstImage)
+
+        if (imageURL) {
+            const imgURL = {
+                url: imageURL,
+                preview: false
+            }
+            image.push(imgURL)
+        }
+        if (imageURL2) {
+            const imgURL2 = {
+                url: imageURL2,
+                preview: false
+            }
+            image.push(imgURL2)
+        }
+        if (imageURL3) {
+            const imgURL3 = {
+                url: imageURL3,
+                preview: false
+            }
+            image.push(imgURL3)
+        }
+        if (imageURL4) {
+            const imgURL4 = {
+                url: imageURL4,
+                preview: false
+            }
+            image.push(imgURL4)
+        }
 
 
-        dispatch(createASpot(data, image, owner))
 
-        history.push(`/spots/${spots.id}`)
+        const createdSpot = await dispatch(createASpot(data, image))
+        if (createdSpot) {
+            history.push(`/spots/${spots.id}`)
+        }
     }
 
     // if (submit) {
@@ -145,7 +117,7 @@ const CreateSpot = () => {
     //     return;
     // }
 
-    return (
+    return CreateSpot && (
         <div className="form-container">
             <h1>Create a new Spot</h1>
             <form className="spot-form"

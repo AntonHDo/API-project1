@@ -30,16 +30,16 @@ const CurrentUserSpot = () => {
 
 
 
-    const handleCLick = (spot) => {
+    const handleCLick = async (spot) => {
 
 
         // console.log("spot for handle click", spots.id)
-        dispatch(deleteASpot(spot))
+        await dispatch(deleteASpot(spot))
         closeModal()
         history.push('/')
     }
 
-    return (
+    return CurrentUserSpot && (
         <div className="spotsPage">
 
             <h2>Manage Your Spots</h2>
@@ -48,29 +48,29 @@ const CurrentUserSpot = () => {
 
                 {spotsArray.map(spot => (
                     <div
-                        className='spotCard' key={spot.id}>
-                        <Link to={`/spots/${spot.id}`}>
+                        className='spotCard' key={spot?.id}>
+                        <Link to={`/spots/${spot?.id}`}>
                             <div className="room">
                                 <div className="imgDiv">
-                                    <img className="spotImg" src={spot.previewImage}></img>
+                                    <img className="spotImg" src={spot?.previewImage}></img>
                                 </div>
                                 <div className="roomDetails">
                                     <div className="roomData">
                                         <div className="spotLocationContainer">
                                             <div className="spot-city">
-                                                {spot.city}, {spot.state}
+                                                {spot?.city}, {spot?.state}
                                                 <span className="starReview">
                                                     <i className="fa-sharp fa-solid fa-star"></i>
-                                                    <span>{spot.avgRating}</span>
+                                                    <span>{spot?.avgRating}</span>
                                                 </span>
-                                                <div><b>${spot.price}</b> <span>night</span></div>
+                                                <div><b>${spot?.price}</b> <span>night</span></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </Link>
-                        <Link to={`/spots/${spot.id}/edit`}>
+                        <Link to={`/spots/${spot?.id}/edit`}>
                             <button>Update</button>
                         </Link>
                         {/* <button>Delete</button> */}
