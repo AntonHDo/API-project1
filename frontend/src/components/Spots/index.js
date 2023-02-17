@@ -23,7 +23,7 @@ const AllSpots = () => {
     return spotsArray && spots && (
         <div className="spotsPage">
             <div className="eachSpot">
-                {spotsArray?.map((spot) => (
+                {spotsArray.map((spot) => (
                     <div
                         className='spotCard' key={spot?.id}>
                         <NavLink to={`/spots/${spot?.id}`}>
@@ -51,7 +51,7 @@ const AllSpots = () => {
                                         <div className="star-container">
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
-                                                <span>{spot.avgRating?.toFixed(1)}</span>
+                                                <span>{spot?.avgRating}</span>
                                             </span>
                                         </div>
                                     </div>

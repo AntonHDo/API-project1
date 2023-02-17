@@ -243,7 +243,7 @@ const SpotDetail = () => {
                         $
                         {spot?.price}
                         night,
-                        {spot.avgStarRating?.toFixed(1)},
+                        {spot.avgStarRating},
                         {spot?.numReviews}
                     </div>
                     <button className="site-button">Reserve</button>
