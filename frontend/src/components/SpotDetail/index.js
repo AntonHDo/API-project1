@@ -224,15 +224,16 @@ const SpotDetail = () => {
                 <div className="preview-image-left">
                     {spot.SpotImages?.map(image => (
                         <div key={image.id}>
-                            <img src={image.url} />
+                            <img src={image.url[0]} alt="Main Preview Image" />
+                            <div className="preview-image-right">
+                                <img src={image.url[1]} alt="Preview Image 2" />
+                                <img src={image.url[2]} alt="Preview Image 3" />
+                                <img src={image.url[3]} alt="Preview Image 4" />
+                                <img src={image.url[4]} alt="Preview Image 5" />
+
+                            </div>
                         </div>
                     ))}
-                </div>
-                <div className="preview-image-right">
-                    {/* <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
-                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
-                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" />
-                    <img src="https://mycleaningangel.com/wp-content/uploads/2020/11/airbnb-cleaning.jpg" /> */}
                 </div>
             </div>
             <hr></hr>
@@ -256,7 +257,7 @@ const SpotDetail = () => {
                             {checkNewReview()}
                         </div>
                     </div>
-                    <button className="site-button">Reserve</button>
+                    <button className="site-button" onClick={() => alert('Feature Coming Soon!')}>Reserve</button>
                 </div>
             </div>
             <hr></hr>
