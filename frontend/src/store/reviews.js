@@ -2,7 +2,16 @@ import { csrfFetch } from "./csrf";
 
 const LOAD_REVIEWS = 'reviews/LOAD_REVIEWS'
 const LOAD_CURRENT_REVIEWS = 'reviews/LOAD_CURRENT_REVIEWS'
+const POST_REVIEWS = 'reviews/POST_REVIEWS'
+const REMOVE_REVIEWS = 'reviews/REMOVE_REVIEWS'
 
+
+const deleteReview = (id) => {
+    return {
+        type: REMOVE_REVIEWS,
+        id
+    }
+}
 
 const loadReviews = (reviews) => {
     return {
@@ -11,25 +20,32 @@ const loadReviews = (reviews) => {
     }
 }
 
-// const loadCurrentReviews = (reviews) => {
-//     return {
-//         type: LOAD_CURRENT_REVIEWS,
-//         reviews
-//     }
-// }
+const loadCurrentReviews = (reviews) => {
+    return {
+        type: LOAD_CURRENT_REVIEWS,
+        reviews
+    }
+}
 
-//get current user reviews
-// export const getCurrentReviews = () => async dispatch => {
-//     const response = await csrfFetch(`/api/reviews/current`);
-//     if (response.ok) {
-//         const list = await response.json()
-//         dispatch(loadCurrentReviews(list))
-//     }
-// }
+const createReview = (review) => {
+    return {
+        type: POST_REVIEWS,
+        review
+    }
+}
+
+// get current user reviews
+export const getCurrentReviews = () => async dispatch => {
+    const response = await csrfFetch(`/api/reviews/current`);
+    if (response.ok) {
+        const review = await response.json()
+        dispatch(loadCurrentReviews(review.Reviews))
+    }
+}
 
 //get all reviews by spot id
-export const getReviews = (spotId) => async dispatch => {
-    const response = await fetch(`/api/spots/${spotId}/reviews`);
+export const getReviews = (id) => async dispatch => {
+    const response = await fetch(`/api/spots/${id}/reviews`);
     if (response.ok) {
         const reviews = await response.json();
         dispatch(loadReviews(reviews))
@@ -37,16 +53,20 @@ export const getReviews = (spotId) => async dispatch => {
 }
 
 //post a review
-export const postAReview = (spotId, review) => async () => {
-    const newReview = await csrfFetch(`/api/spots/${spotId}/reviews`, {
-        method: 'POST',
+export const postAReview = (spotId, reviews) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(review)
+        body: JSON.stringify(reviews)
     })
-    const aNewReview = await newReview.json();
-    return aNewReview
+    if (response.ok) {
+        const newReview = await response.json();
+        dispatch(createReview(newReview))
+        return newReview
+    }
+    return response
 }
 
 //create a review image
@@ -76,11 +96,13 @@ export const editAReview = (review, reviewId) => async () => {
 }
 
 //remove review
-export const removeReview = (reviewId) => async () => {
-    const deleteReview = await csrfFetch(`/api/reviews/${reviewId}`, {
+export const removeReview = (reviewId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE'
     })
-    return deleteReview
+    const review = await response.json()
+    dispatch(deleteReview(reviewId))
+    return review
 }
 
 const initialState = {
@@ -90,17 +112,36 @@ const initialState = {
 
 const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
+        case REMOVE_REVIEWS:
+            const deleteState = { ...state }
+            delete deleteState[action.id];
+            return deleteState
         case LOAD_REVIEWS:
-            const spotReviews = {};
-            action.reviews.Reviews.forEach(review => {
-                spotReviews[review.id] = review
+            // const spotReviews = { ...state };
+            // action.reviews.Reviews.forEach(review => {
+            //     spotReviews[review.id] = review
+            // })
+            // return {
+            //     spot: spotReviews,
+            //     user: { ...state.user }
+            // }
+            const newState = { ...state }
+            newState.user = action.reviews
+            console.log("spotsreview from the reducer", newState)
+            return newState
+        case LOAD_CURRENT_REVIEWS:
+            const currentReviews = {}
+            action.reviews.forEach(review => {
+                currentReviews[review.id] = review
             })
             return {
-                spot: spotReviews,
-                user: { ...state.user }
+                spot: { ...state.spot },
+                user: currentReviews
             }
-        // case LOAD_CURRENT_REVIEWS:
-        //     return { ...action.reviews.Reviews }
+        case POST_REVIEWS:
+            const newPost = { ...state }
+            newPost[action.review.id] = action.review
+            return newPost
         default:
             return state;
     }

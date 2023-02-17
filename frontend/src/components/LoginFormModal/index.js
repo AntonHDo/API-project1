@@ -34,7 +34,7 @@ function LoginFormModal() {
                         <li key={idx}>{error}</li>
                     ))}
                 </ul>
-                <label>
+                <label className="login-form-label">
                     Username or Email
                     <input
                         type="text"
@@ -43,7 +43,7 @@ function LoginFormModal() {
                         required
                     />
                 </label>
-                <label>
+                <label className="login-form-label">
                     Password
                     <input
                         type="password"
@@ -52,7 +52,7 @@ function LoginFormModal() {
                         required
                     />
                 </label>
-                <button type="submit">Log In</button>
+                <button className="form-button site-button" type="submit">Log In</button>
             </form>
         </>
     );

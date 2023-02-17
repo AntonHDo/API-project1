@@ -1,0 +1,11 @@
+.signup-label {
+  display: flex;
+  flex-direction: column;
+  margin: .4em 0;
+}
+
+input {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: solid 1px var(--grey);
+}

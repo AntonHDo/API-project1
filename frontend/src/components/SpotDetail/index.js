@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getSpots, getDetailOfSpot } from "../../store/spots";
+import { getDetailOfSpot } from "../../store/spots";
 import { useParams, useHistory } from "react-router-dom";
 import { getReviews, removeReview } from "../../store/reviews"
 import './SpotDetail.css'
 import OpenModalButton from "../OpenModalButton";
 import { useModal } from "../../context/Modal";
+import CreateReviewModal from "../CreateReviewModal";
+
 
 const SpotDetail = () => {
     const dispatch = useDispatch()
@@ -13,9 +15,19 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
     const user = useSelector((state) => state.session.user)
-    const getAllReviews = (state) => Object.values(state.reviews.spot)
-    const reviews = useSelector(getAllReviews)
-    const { closeModal } = useModal
+
+    const reviews = useSelector((state) => state.reviews.user)
+    console.log("reviews from spotdetail:", reviews)
+    const { closeModal } = useModal()
+
+    useEffect(() => {
+        const refresh = async () => {
+
+            await dispatch(getDetailOfSpot(spotId))
+            await dispatch(getReviews(spotId))
+        }
+        refresh()
+    }, [dispatch, spotId])
 
     let reviewChecker
     let reviewNum = spot?.numReviews
@@ -39,15 +51,16 @@ const SpotDetail = () => {
             )
         }
     }
-    // console.log("review from reviews", reviews)
     const showReviews = () => {
+        // console.log(reviews)
         if (reviews?.length === 0) {
             return (
                 <div>hihi</div>
             )
         } else {
+            console.log("review from reviews", reviews.Reviews)
             let name = spot.name
-            return reviews?.map((review) => {
+            return reviews.Reviews?.map((review) => {
                 let starRating
 
                 if (review?.stars === 1) {
@@ -102,7 +115,7 @@ const SpotDetail = () => {
                     if (user && user.id === review.userId) {
                         return (
                             <>
-                                <div>
+                                <div key={review.id}>
                                     <OpenModalButton
                                         buttonText={"Delete"}
                                         modalComponent={
@@ -123,7 +136,7 @@ const SpotDetail = () => {
                 return (
                     <>
                         <div>
-                            {review?.User?.firstName}
+                            {review.User.firstName}
                             {starRating}
                         </div>
                         <div>
@@ -150,37 +163,50 @@ const SpotDetail = () => {
                     <OpenModalButton
                         buttonText={"Post Your Review!"}
                         modalComponent={
-                            <div></div>
+                            <CreateReviewModal id={spotId} />
                         }
-                    />
+                    ></OpenModalButton>
                 </div>
             )
         }
     }
+
     const avgStarPercent = () => {
-        if (spot.avgRating !== null) {
+        if (spot?.avgRating !== null) {
             return spot?.avgStarRating?.toFixed(1)
         }
         return spot?.avgStarRating
     }
 
-
-
-    useEffect(() => {
-        const refresh = async () => {
-
-            await dispatch(getDetailOfSpot(spotId))
-            await dispatch(getReviews(spotId))
+    const checkNewReview = () => {
+        if (reviewChecker === "New") {
+            return (
+                <div>{reviewChecker}</div>
+            )
+        } else {
+            return (
+                <div>{reviewNum} {reviewChecker}</div>
+            )
         }
-        refresh()
-    }, [dispatch, spotId])
+    }
+
+    // useEffect(() => {
+    //     const refresh = async () => {
+
+    //         await dispatch(getDetailOfSpot(spotId))
+    //         await dispatch(getReviews(spotId))
+    //     }
+    //     refresh()
+    // }, [dispatch, spotId])
 
 
 
+    const rev = reviews?.Reviews?.find((review) => review?.userId === user?.id)
+    console.log("here is the reviews", rev)
     const handleSubmitForDelete = async (e) => {
         e.preventDefault()
 
-        await dispatch(removeReview(spotId, reviews[0].id))
+        await dispatch(removeReview(rev?.id))
         await dispatch(getDetailOfSpot(spotId))
         closeModal()
     }
@@ -211,25 +237,28 @@ const SpotDetail = () => {
             </div>
             <hr></hr>
             <div className="info-container">
-                <div>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</div>
+                <h2>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</h2>
                 <div className="price-reserve-container">
                     <div>
                         $
                         {spot?.price}
                         night,
-                        {spot?.avgStarRating},
+                        {spot.avgStarRating?.toFixed(1)},
                         {spot?.numReviews}
                     </div>
-                    <button>Reserve</button>
+                    <button className="site-button">Reserve</button>
                 </div>
             </div>
             <hr></hr>
             <div className="star-review-container">
                 <i className="fa-sharp fa-solid fa-star" />
-                {reviewBtb()}
             </div>
-            {noReviewsYet()}
-            {avgStarPercent()}
+            {checkNewReview()}
+            <div>
+                {reviewBtb()}
+                {avgStarPercent()}
+                {noReviewsYet()}
+            </div>
             <div>
                 {showReviews()}
             </div>
