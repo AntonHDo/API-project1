@@ -50,7 +50,8 @@ const AllSpots = () => {
                                         <div className="star-container">
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
-                                                <span>{spot?.avgRating?.toFixed(1)}</span>
+                                                {/* <span>{Math.round(spot?.avgRating * 10) / 10}</span> */}
+                                                <div>{spot && spot?.avgRating?.toPrecision(2)}</div>
                                             </span>
                                         </div>
                                     </div>
