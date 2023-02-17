@@ -51,7 +51,7 @@ const AllSpots = () => {
                                         <div className="star-container">
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
-                                                <span>{spot?.avgRating?.toFixed(1)}</span>
+                                                <span>{spot.avgRating?.toFixed(1)}</span>
                                             </span>
                                         </div>
                                     </div>
