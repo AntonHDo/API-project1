@@ -9,7 +9,28 @@ const AllSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots.allSpots)
     const spotsArray = Object.values(spots)
-
+    const myMap = {}
+    for (let key in spots) {
+        let avgRate = Number(spots[key].avgRating).toFixed(1)
+        spots[key] = {
+            address: spots[key].address,
+            city: spots[key].city,
+            country: spots[key].country,
+            createdAt: spots[key].createdAt,
+            description: spots[key].description,
+            id: spots[key].id,
+            lat: spots[key].lat,
+            lng: spots[key].lng,
+            name: spots[key].name,
+            ownerId: spots[key].ownerId,
+            previewImage: spots[key].previewImage,
+            price: spots[key].price,
+            state: spots[key].state,
+            updatedAt: spots[key].updatedAt,
+            avgRating: avgRate
+        }
+    }
+    console.log("Spots array from spot", spotsArray)
 
     useEffect(() => {
         const refresh = async () => {
@@ -51,7 +72,7 @@ const AllSpots = () => {
                                             <span className="starReview">
                                                 <i className="fa-sharp fa-solid fa-star"></i>
                                                 {/* <span>{Math.round(spot?.avgRating * 10) / 10}</span> */}
-                                                <div>{spot && spot?.avgRating?.toPrecision(2)}</div>
+                                                <div>{spot && spot?.avgRating}</div>
                                             </span>
                                         </div>
                                     </div>
