@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { createASpot } from "../../store/spots";
 import './CreateSpot.css'
 
@@ -40,8 +41,16 @@ const CreateSpot = ({ id }) => {
         if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
         if (!name) errors['name'] = 'Name is required'
         if (!price) errors['price'] = 'Price is required'
-        if (!previewImage) errors['previewImage'] = 'Preview image is required'
-        // if (!imageURL.includes('.png')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (!previewImage || previewImage === '') errors['previewImage'] = 'Preview image is required'
+        if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) errors['previewImage'] = 'Preview image URL must end in .png, .jpg, or .jpeg'
+
+        if (imageURL !== "" && !imageURL.endsWith('.png') && !imageURL.endsWith('.jpg') && !imageURL.endsWith('.jpeg')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
+
+        if (imageURL2 !== "" && !imageURL2.endsWith('.png') && !imageURL2.endsWith('.jpg') && !imageURL2.endsWith('.jpeg')) errors['imageURL2'] = 'Image URL must end in .png, .jpg, or .jpeg'
+
+        if (imageURL3 !== "" && !imageURL3.endsWith('.png') && !imageURL3.endsWith('.jpg') && !imageURL3.endsWith('.jpeg')) errors['imageURL3'] = 'Image URL must end in .png, .jpg, or .jpeg'
+
+        if (imageURL4 !== "" && !imageURL4.endsWith('.png') && !imageURL4.endsWith('.jpg') && !imageURL4.endsWith('.jpeg')) errors['imageURL4'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
 
         if (Object.keys(errors).length > 0) {
@@ -103,7 +112,8 @@ const CreateSpot = ({ id }) => {
 
         const createdSpot = await dispatch(createASpot(data, image))
         if (createdSpot) {
-            history.push(`/spots/${spots.id}`)
+            history.push(`/spots/${createdSpot.id}`)
+            return
         }
     }
 
@@ -197,8 +207,12 @@ const CreateSpot = ({ id }) => {
                         {errors['imageURL'] && <div className="form-error">{errors['imageURL']}</div>}
                     </div>
                     <input type="text" placeholder="Image URL" value={imageURL2} onChange={(e) => setImageURL2(e.target.value)} />
+                    {errors['imageURL2'] && <div className="form-error">{errors['imageURL2']}</div>}
+
                     <input type="text" placeholder="Image URL" value={imageURL3} onChange={(e) => setImageURL3(e.target.value)} />
+                    {errors['imageURL3'] && <div className="form-error">{errors['imageURL3']}</div>}
                     <input type="text" placeholder="Image URL" value={imageURL4} onChange={(e) => setImageURL4(e.target.value)} />
+                    {errors['imageURL4'] && <div className="form-error">{errors['imageURL4']}</div>}
 
                     <hr></hr>
                 </div>

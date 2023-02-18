@@ -127,7 +127,7 @@ const reviewsReducer = (state = initialState, action) => {
             // }
             const newState = { ...state }
             newState.user = action.reviews
-            console.log("spotsreview from the reducer", newState)
+            // console.log("spotsreview from the reducer", newState)
             return newState
         case LOAD_CURRENT_REVIEWS:
             const currentReviews = {}

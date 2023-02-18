@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
@@ -13,6 +13,10 @@ function SignupFormModal() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState([]);
+    const [showErrors, setShowErrors] = useState(false)
+    const [disableBtn, setDisableBtn] = useState(true)
+    const [signUpClass, setSignUpClass] = useState("disabled")
+
     const { closeModal } = useModal();
 
     const handleSubmit = (e) => {
@@ -22,12 +26,26 @@ function SignupFormModal() {
             return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
                 .then(closeModal)
                 .catch(async (res) => {
+                    setShowErrors(true)
                     const data = await res.json();
                     if (data && data.errors) setErrors(data.errors);
                 });
         }
+        setShowErrors(true)
         return setErrors(['Confirm Password field must be the same as the Password field']);
     };
+
+    useEffect(() => {
+        if (email.length < 1 || username.length < 1 || firstName.length < 1 || lastName.length < 1 || password.length < 1 || confirmPassword.length < 1 || password !== confirmPassword || password.length < 6) {
+            setDisableBtn(true)
+            setSignUpClass('disabled')
+            return
+        }
+        setSignUpClass('enabled')
+        setDisableBtn(false)
+    }, [email, username, firstName, lastName, password, confirmPassword])
+
+
 
     return (
         <>
@@ -36,24 +54,6 @@ function SignupFormModal() {
                 <ul>
                     {errors.map((error, idx) => <li key={idx}>{error}</li>)}
                 </ul>
-                <label className="signup-label">
-                    Email
-                    <input
-                        type="text"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </label>
-                <label className="signup-label">
-                    Username
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label>
                 <label className="signup-label">
                     First Name
                     <input
@@ -69,6 +69,24 @@ function SignupFormModal() {
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        required
+                    />
+                </label>
+                <label className="signup-label">
+                    Email
+                    <input
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </label>
+                <label className="signup-label">
+                    Username
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </label>
@@ -90,7 +108,7 @@ function SignupFormModal() {
                         required
                     />
                 </label>
-                <button className="form-button site-button" type="submit">Sign Up</button>
+                <button className="si" disabled={disableBtn} type="submit">Sign Up</button>
             </form>
         </>
     );

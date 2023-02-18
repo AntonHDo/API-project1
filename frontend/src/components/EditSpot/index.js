@@ -7,14 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { editASpot } from "../../store/spots";
 import { getSpots } from "../../store/spots";
 import { createASpot } from "../../store/spots";
-import './EditSpot.css'
+
 
 const EditSpot = () => {
+    const user = useSelector((state) => state.session.user)
+
     const history = useHistory()
     const dispatch = useDispatch()
     const { spotId } = useParams()
     const spot = useSelector(state => state.spots.allSpots)
-    console.log("spot from edit spot", spot[spotId])
     const [country, setCountry] = useState(spot[spotId]?.country)
     const [address, setAddress] = useState(spot[spotId]?.address)
     const [city, setCity] = useState(spot[spotId]?.city)
@@ -23,9 +24,18 @@ const EditSpot = () => {
     const [longitude, setLongitude] = useState(spot[spotId]?.lng)
     const [description, setDescription] = useState(spot[spotId]?.description)
     const [name, setName] = useState(spot[spotId]?.name)
-    const [price, setPrice] = useState(1)
-    const [previewImage, setPreviewImage] = useState('')
+    const [price, setPrice] = useState(spot[spotId]?.price)
+    const [previewImage, setPreviewImage] = useState(spot[spotId]?.previewImage)
     const [errors, setErrors] = useState({})
+
+    const userIsLoggedIn = !!(user?.id)
+    const spotBelongsToUser = (user || {}).id === spot[spotId]?.ownerId
+
+
+    if (!userIsLoggedIn || !spotBelongsToUser) {
+        history.push('/')
+        return
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -39,7 +49,8 @@ const EditSpot = () => {
         if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
         if (!name) errors['name'] = 'Name is required'
         if (!price) errors['price'] = 'Price is required'
-        // if (!previewImage) errors['previewImage'] = 'Preview image is required'
+        if (!previewImage || previewImage === '') errors['previewImage'] = 'Preview image is required'
+        if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) errors['previewImage'] = 'Preview image URL must end in .png, .jpg, or .jpeg'
         // if (!imageURL.includes('.png')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
         // if (!imageURL.includes('.jpg')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
@@ -68,12 +79,23 @@ const EditSpot = () => {
             description: description,
             name: name,
             price: price,
-            previewImage: previewImage,
         }
 
-        dispatch(editASpot(data))
+        const image = []
+        const firstImage = {
+            url: previewImage,
+            preview: true
+        }
+        image.push(firstImage)
 
-        history.push(`/spots/${spot[spotId].id}`)
+        const editedSpot = editASpot(data, image, spot[spotId].id)
+        dispatch(editedSpot)
+
+
+        if (editedSpot) {
+            history.push(`/spots/${spotId}`)
+            return
+        }
     }
 
 

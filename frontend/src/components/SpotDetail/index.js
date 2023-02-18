@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDetailOfSpot } from "../../store/spots";
 import { useParams, useHistory } from "react-router-dom";
-import { getReviews, removeReview } from "../../store/reviews"
+import { getReviews, postAReview, removeReview } from "../../store/reviews"
 import './SpotDetail.css'
 import OpenModalButton from "../OpenModalButton";
 import { useModal } from "../../context/Modal";
@@ -15,19 +15,21 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
     const user = useSelector((state) => state.session.user)
-
+    const reviews2 = useSelector((state) => state.reviews)
     const reviews = useSelector((state) => state.reviews.user)
-    console.log("reviews from spotdetail:", reviews)
+    // console.log("reviews from spotdetail:", reviews)
     const { closeModal } = useModal()
-
     useEffect(() => {
+
         const refresh = async () => {
 
             await dispatch(getDetailOfSpot(spotId))
             await dispatch(getReviews(spotId))
         }
         refresh()
-    }, [dispatch, spotId])
+    }, [dispatch, spotId, JSON.stringify(reviews2)])
+
+
 
     let reviewChecker
     let reviewNum = spot?.numReviews
@@ -58,7 +60,7 @@ const SpotDetail = () => {
                 <div>hihi</div>
             )
         } else {
-            console.log("review from reviews", reviews.Reviews)
+            // console.log("review from reviews", reviews.Reviews)
             let name = spot.name
             return reviews.Reviews?.map((review) => {
                 let starRating
@@ -154,7 +156,11 @@ const SpotDetail = () => {
         }
     }
 
-
+    const createReview = (async (spotId, data) => {
+        const newReview = await postAReview(spotId, data)
+        await dispatch(newReview)
+        await dispatch(getDetailOfSpot)
+    })
 
     const reviewBtb = () => {
         if (user) {
@@ -163,7 +169,7 @@ const SpotDetail = () => {
                     <OpenModalButton
                         buttonText={"Post Your Review!"}
                         modalComponent={
-                            <CreateReviewModal id={spotId} />
+                            <CreateReviewModal id={spotId} createReview={createReview} />
                         }
                     ></OpenModalButton>
                 </div>
@@ -173,9 +179,9 @@ const SpotDetail = () => {
 
     const avgStarPercent = () => {
         if (spot?.avgRating !== null) {
-            return spot?.avgStarRating?.toFixed(1)
+            return (Number(spot?.avgStarRating) || 0.0).toFixed(1)
         }
-        return spot?.avgStarRating
+        return (Number(spot?.avgStarRating) || 0.0).toFixed(1)
     }
 
     const checkNewReview = () => {
@@ -202,7 +208,7 @@ const SpotDetail = () => {
 
 
     const rev = reviews?.Reviews?.find((review) => review?.userId === user?.id)
-    console.log("here is the reviews", rev)
+    // console.log("here is the reviews", rev)
     const handleSubmitForDelete = async (e) => {
         e.preventDefault()
 
@@ -219,21 +225,24 @@ const SpotDetail = () => {
             <div className="location-container">
                 {spot.city}, {spot.state}, {spot.country}
             </div>
-
+            {spot?.SpotImages?.map(image => (
+                <div className="image-testing">
+                    <img src={image?.url} />
+                </div>
+            ))}
             <div className="previewImg">
+                {/* {console.log('can i log in here?:', spot?.SpotImages[0])} */}
                 <div className="preview-image-left">
-                    {spot.SpotImages?.map(image => (
-                        <div key={image.id}>
-                            <img src={image.url[0]} alt="Main Preview Image" />
-                            <div className="preview-image-right">
-                                <img src={image.url[1]} alt="Preview Image 2" />
-                                <img src={image.url[2]} alt="Preview Image 3" />
-                                <img src={image.url[3]} alt="Preview Image 4" />
-                                <img src={image.url[4]} alt="Preview Image 5" />
 
-                            </div>
-                        </div>
-                    ))}
+                    {/* <img src={spot?.SpotImages[0]?.url} alt="Main Preview Image 1" /> */}
+                    <div className="preview-image-right">
+                        {/* <img src={spot.SpotImages[1]} alt="Preview Image 2" />
+                        <img src={spot.SpotImages[2]} alt="Preview Image 3" />
+                        <img src={spot.SpotImages[3]} alt="Preview Image 4" />
+                        <img src={spot.SpotImages[4]} alt="Preview Image 5" /> */}
+                    </div>
+
+
                 </div>
             </div>
             <hr></hr>
@@ -257,7 +266,7 @@ const SpotDetail = () => {
                             {checkNewReview()}
                         </div>
                     </div>
-                    <button className="site-button" onClick={() => alert('Feature Coming Soon!')}>Reserve</button>
+                    <button className="site-button" onClick={() => alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
             </div>
             <hr></hr>

@@ -104,7 +104,7 @@ export const createASpot = (data, image) => async (dispatch) => {
             if (response2.ok) {
                 let oneImage = await response2.json()
                 newSpot.SpotImages.push(oneImage)
-                console.log("new spot from create a spot", newSpot.SpotImages)
+                // console.log("new spot from create a spot", newSpot.SpotImages)
             }
         }
 
@@ -131,7 +131,8 @@ export const createASpot = (data, image) => async (dispatch) => {
 
 
 //edit a spot
-export const editASpot = (spot, spotId) => async (dispatch) => {
+export const editASpot = (spot, image, spotId) => async (dispatch) => {
+    spot.previewImage = image[0].url
     const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: "PUT",
         headers: {
@@ -141,10 +142,45 @@ export const editASpot = (spot, spotId) => async (dispatch) => {
     })
     if (response.ok) {
         const editedSpot = await response.json()
-        dispatch(editSpot(editedSpot))
+        console.log("spot from spots store", spot)
+        dispatch(editSpot(spot))
+        // console.log("edited spot from the store:", editedSpot)
+        return editedSpot
     }
+    return response
 }
 
+// export const editASpot = (spot, image, spotId) => async (dispatch) => {
+//     const response = await csrfFetch(`/api/spots/${spotId}`, {
+//         method: "PUT",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(spot)
+//     })
+//     if (response.ok) {
+//         const editedSpot = await response.json()
+
+//         editedSpot['SpotImages'] = [];
+//         for (let i = 0; i < image.length; i++) {
+//             let response2 = await csrfFetch(`/api/spots/${editedSpot.id}/images`, {
+//                 method: "POST",
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 },
+//                 body: JSON.stringify(image[i])
+//             })
+//             if (response2.ok) {
+//                 let oneImage = await response2.json()
+//                 editedSpot.SpotImages.push(oneImage)
+
+//             }
+//         }
+//         dispatch(addSpot(editedSpot))
+//         return editedSpot
+//     }
+//     return response
+// }
 
 //delete a spot
 export const deleteASpot = (spotId) => async (dispatch) => {
@@ -172,24 +208,21 @@ const spotsReducer = (state = initialState, action) => {
             return newState
         case ADD_SPOT:
             // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
-            newState = { ...state, allSpots: { ...state.allSpots, ...action.spot }, singleSpot: { ...state.spot, ...action.spot } }
-            newState.allSpots['previewImage'] = action.spot.SpotImages[0].url
-            console.log("new state from the reducer:", newState)
+            newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.spot, ...action.spot } }
+            newState.allSpots[action.spot.id] = action.spot
+            newState.allSpots[action.spot.id]['previewImage'] = action.spot.SpotImages[0].url
+
             delete newState.allSpots.SpotImages
             return newState
         case LOAD_CURRENT_USER_SPOT:
             newState = { allSpots: {} };
             action.currentUserSpot.Spots.forEach((spot) => (newState.allSpots[spot.id] = spot))
             return newState
-        // let allSpots = { ...newState };
-        // newState = { allSpot: {} };
-        // action.currentUserSpot.Spots.forEach(spot => newState[spot.id] = spot)
-        // let allSpots = { ...newState }
-        // console.log("newstate from reducer", action.currentUserSpot)
-        // return allSpots
+
         case EDIT_SPOT:
             newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
             newState.singleSpot = action.editedSpot;
+            newState.allSpots[action.editedSpot.id] = action.editedSpot;
             return newState
         case LOAD_SPOT_DETAILS:
             // newState = { ...state, allSpots: { ...state.allSpots }, singleSpot: { ...state.singleSpot } }
