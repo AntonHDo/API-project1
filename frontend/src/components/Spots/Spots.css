@@ -29,3 +29,8 @@
 .spotLocationContainer {
     margin-right: 10px;
 } */
+
+.starReview {
+    display: flex;
+    gap: 5px;
+}
