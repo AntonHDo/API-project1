@@ -9,9 +9,9 @@ const AllSpots = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots.allSpots)
     const spotsArray = Object.values(spots)
-    const myMap = {}
+
     for (let key in spots) {
-        let avgRate = Number(spots[key].avgRating).toFixed(1)
+        let avgRate = (Number(spots[key].avgRating) || 0.0).toFixed(1)
         spots[key] = {
             address: spots[key].address,
             city: spots[key].city,
@@ -30,7 +30,7 @@ const AllSpots = () => {
             avgRating: avgRate
         }
     }
-    console.log("Spots array from spot", spotsArray)
+    // console.log("Spots array from spot", spotsArray)
 
     useEffect(() => {
         const refresh = async () => {
@@ -49,7 +49,7 @@ const AllSpots = () => {
                         <NavLink to={`/spots/${spot?.id}`}>
                             <div className="room">
                                 <div className="imgDiv">
-                                    <img className="spotImg" src={spot?.previewImage}></img>
+                                    <img className="spotImg" alt="spotimage" src={spot?.previewImage}></img>
                                 </div>
                                 <div className="roomDetails">
                                     <div className="roomData">

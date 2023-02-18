@@ -6,7 +6,8 @@ import { postAReview } from "../../store/reviews";
 import { getDetailOfSpot } from "../../store/spots";
 import { getCurrentReviews } from "../../store/reviews";
 
-const CreateReviewModal = ({ id }) => {
+const CreateReviewModal = ({ id, createReview }) => {
+  const user = useSelector((state) => state.session.user)
   const spot = useSelector((state) => state.spots.singleSpot)
   const reviews = useSelector((state) => state.reviews.user)
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ const CreateReviewModal = ({ id }) => {
       review
     }
 
-    await dispatch(postAReview(spot.id, data))
-    await dispatch(getDetailOfSpot(id))
+    createReview(spot.id, data)
     closeModal()
   }
 
@@ -90,7 +90,7 @@ const CreateReviewModal = ({ id }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h2>How was your stay?</h2>
+        <h2>How was your stay {user?.firstName}?</h2>
         <div>
           <textarea type='text' placeholder="Leave your review here..." value={review} onChange={(e) => setReview(e.target.value)} />
         </div>

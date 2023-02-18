@@ -68,6 +68,7 @@ function ProfileButton({ user }) {
                         <li>{user.email}</li>
                         <hr></hr>
                         <li><NavLink to={'/spots/current'} className='manage-spot-link'>Manage Spots</NavLink></li>
+                        <li className='manage-spot-link' onClick={() => alert("Feature Coming Soon...")}>Manage Reviews</li>
                         <hr></hr>
                         <li>
                             <button className="site-button" onClick={logout}>Log Out</button>
@@ -85,14 +86,14 @@ function ProfileButton({ user }) {
                             onItemClick={closeMenu}
                             modalComponent={<SignupFormModal />}
                         />
-                        <OpenModalMenuItem
+                        {/* <OpenModalMenuItem
                             itemText="Demo"
                             onItemClick={closeMenu}
                             modalComponent={<form onSubmit={handleSubmit}>
                                 <button type="submit">Login</button>
                             </form>}
 
-                        />
+                        /> */}
                     </>
                 )}
             </ul>
