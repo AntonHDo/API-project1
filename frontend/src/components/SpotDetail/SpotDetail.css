@@ -1,0 +1,14 @@
+.image-container-testing {}
+
+.imageTesting {
+  display: flex;
+
+
+}
+
+.inSideImage {
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 270px;
+  width: 250px;
+}

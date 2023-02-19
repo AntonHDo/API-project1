@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDetailOfSpot } from "../../store/spots";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { getReviews, postAReview, removeReview } from "../../store/reviews"
 import './SpotDetail.css'
 import OpenModalButton from "../OpenModalButton";
@@ -15,10 +15,12 @@ const SpotDetail = () => {
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
     const user = useSelector((state) => state.session.user)
-    const reviews2 = useSelector((state) => state.reviews)
+    const reviews2 = useSelector((state) => Object.values(state.reviews))
     const reviews = useSelector((state) => state.reviews.user)
-    // console.log("reviews from spotdetail:", reviews)
+
     const { closeModal } = useModal()
+
+
     useEffect(() => {
 
         const refresh = async () => {
@@ -29,7 +31,43 @@ const SpotDetail = () => {
         refresh()
     }, [dispatch, spotId, JSON.stringify(reviews2)])
 
+    // let preImgArray
 
+    // if (spot?.SpotImages?.length > 0) {
+    //     preImgArray = spot?.SpotImages?.filter((image) => {
+    //         if (image.preview === true) {
+    //             return image
+    //         }
+    //     })
+    // }
+
+    // let previewImg
+
+    // if (preImgArray) {
+    //     previewImg = preImgArray[preImgArray.length - 1]
+    // } else {
+    //     previewImg = {
+    //         url: null
+    //     }
+    // }
+    // console.log("check pre img here first", spot?.SpotImages?.length > 0)
+    // let nonPrevImgs = spot?.SpotImage?.filter((image) => {
+    //     if (image.preview === false) {
+    //         return image
+    //     }
+    // })
+
+    // const nonPrevImg = (i) => {
+    //     if (!nonPrevImgs[i]) {
+    //         return (
+    //             <img src="null" alt="No Image"></img>
+    //         )
+    //     } else {
+    //         return (
+    //             <img src={nonPrevImgs[i].url} alt="Other spot pictures" />
+    //         )
+    //     }
+    // }
 
     let reviewChecker
     let reviewNum = spot?.numReviews
@@ -57,7 +95,7 @@ const SpotDetail = () => {
         // console.log(reviews)
         if (reviews?.length === 0) {
             return (
-                <div>hihi</div>
+                <div></div>
             )
         } else {
             // console.log("review from reviews", reviews.Reviews)
@@ -225,22 +263,27 @@ const SpotDetail = () => {
             <div className="location-container">
                 {spot.city}, {spot.state}, {spot.country}
             </div>
+
             {spot?.SpotImages?.map(image => (
-                <div className="image-testing">
-                    <img src={image?.url} />
+                <div className="image-container-testing">
+                    <div className="imageTesting">
+                        <img className="inSideImage" src={image?.url} />
+                    </div>
                 </div>
             ))}
             <div className="previewImg">
-                {/* {console.log('can i log in here?:', spot?.SpotImages[0])} */}
+
+
                 <div className="preview-image-left">
 
-                    {/* <img src={spot?.SpotImages[0]?.url} alt="Main Preview Image 1" /> */}
+                    {/* <img src={!!((spot.SpotImages[0] || {}).url)} alt="Main Preview Image 1" />
+
                     <div className="preview-image-right">
-                        {/* <img src={spot.SpotImages[1]} alt="Preview Image 2" />
+                        <img src={spot.SpotImages[1]} alt="Preview Image 2" />
                         <img src={spot.SpotImages[2]} alt="Preview Image 3" />
                         <img src={spot.SpotImages[3]} alt="Preview Image 4" />
-                        <img src={spot.SpotImages[4]} alt="Preview Image 5" /> */}
-                    </div>
+                        <img src={spot.SpotImages[4]} alt="Preview Image 5" />
+                    </div> */}
 
 
                 </div>
