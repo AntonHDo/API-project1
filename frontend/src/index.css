@@ -8,6 +8,11 @@
 
 /* general styles */
 
+/* Button reset */
+button {
+  background: transparent;
+  border: none;
+}
 
 h1,
 h2,
@@ -188,6 +193,7 @@ nav {
   transition: all 0.3s ease-out;
   opacity: 0;
   transform: translateY(-5%);
+  pointer-events: none;
 }
 
 .profile-dropdown li {

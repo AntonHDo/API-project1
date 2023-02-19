@@ -88,7 +88,7 @@ const CreateReviewModal = ({ id, createReview }) => {
   }
 
   return (
-    <div>
+    <div class="review-modal">
       <form onSubmit={handleSubmit}>
         <h2>How was your stay {user?.firstName}?</h2>
         <div>

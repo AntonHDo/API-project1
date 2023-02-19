@@ -77,6 +77,8 @@ export const getDetailOfSpot = (spotId) => async dispatch => {
         const spot = await response.json();
         dispatch(loadSpotDetails(spot));
         return spot
+        // } else{
+        //     throw new Error("error")
     }
 }
 

@@ -1,5 +1,3 @@
-.image-container-testing {}
-
 .imageTesting {
   display: flex;
 
@@ -11,4 +9,51 @@
   flex-wrap: wrap;
   height: 270px;
   width: 250px;
+}
+
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.info-col {
+  flex: 0 0 70%;
+}
+
+.info-col h2 {
+  margin-top: 0;
+}
+
+.price-inner {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.price-col {
+  padding: 2%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, .2);
+  border-radius: 10px;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.price span {
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.star-container {
+  display: flex;
+}
+
+.star-container>div {
+  margin-left: 5px;
 }
