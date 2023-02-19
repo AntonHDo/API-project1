@@ -175,7 +175,7 @@ const EditSpot = () => {
 
                 <br></br>
                 <br></br>
-                <button className="createSpot" type="submit">Update Spot</button>
+                <button className="createSpot" type="submit">Update Your Spot</button>
             </form>
         </div>
     )
