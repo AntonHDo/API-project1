@@ -18,6 +18,7 @@ const SpotDetail = () => {
     const reviews2 = useSelector((state) => Object.values(state.reviews))
     const reviews = useSelector((state) => state.reviews.user)
 
+
     const { closeModal } = useModal()
 
 
@@ -73,7 +74,7 @@ const SpotDetail = () => {
 
     let reviewChecker
     let reviewNum = spot?.numReviews
-    let unusedreviewNum = spot?.numReviews
+    // let unusedreviewNum = spot?.numReviews
 
     if (reviewNum === 1) {
         reviewChecker = "review"
@@ -95,6 +96,11 @@ const SpotDetail = () => {
     }
     const showReviews = () => {
         // console.log(reviews)
+        let { Reviews } = reviews
+        Reviews = Reviews?.sort((a, b) => new Date(a.createdAt).getMilliseconds() - new Date(b.createdAt).getMilliseconds())
+        console.log("Reviews from reviews:", Reviews)
+
+
         if (reviews?.length === 0) {
             return (
                 <div></div>
@@ -102,7 +108,7 @@ const SpotDetail = () => {
         } else {
             // console.log("review from reviews", reviews.Reviews)
             let name = spot.name
-            return reviews.Reviews?.map((review) => {
+            return Reviews?.map((review) => {
                 let starRating
 
                 if (review?.stars === 1) {
@@ -203,7 +209,7 @@ const SpotDetail = () => {
     })
 
     const reviewBtb = () => {
-        if (user) {
+        if (user && user.id !== spot.ownerId) {
             return (
                 <div>
                     <OpenModalButton
@@ -219,19 +225,20 @@ const SpotDetail = () => {
 
     const avgStarPercent = () => {
         if (spot?.avgRating !== null) {
-            return (Number(spot?.avgStarRating) || 0.0).toFixed(1)
+            const ratingPercent = Number(spot?.avgStarRating).toFixed(1)
+            if (ratingPercent !== "0.0") return (ratingPercent)
         }
-        return (Number(spot?.avgStarRating) || 0.0).toFixed(1)
+        return ""
     }
 
     const checkNewReview = () => {
         if (reviewChecker === "New") {
             return (
-                <div>{reviewChecker}</div>
+                <div className="hide-dot"> {reviewChecker}</div>
             )
         } else {
             return (
-                <div>· {reviewNum} {reviewChecker}</div>
+                <div className="show-dot"> {reviewNum} {reviewChecker}</div>
             )
         }
     }
@@ -304,10 +311,7 @@ const SpotDetail = () => {
                         </div>
                         <div className="star-container">
                             <i className="fa-sharp fa-solid fa-star" />
-                            {avgStarPercent()}
-                            <div>
-                                {checkNewReview()}
-                            </div>
+                            {avgStarPercent()} {checkNewReview()}
                         </div>
                     </div>
                     {/* {spot.avgStarRating} · */}
@@ -318,9 +322,10 @@ const SpotDetail = () => {
             <hr></hr>
             <div className="star-review-container">
                 <i className="fa-sharp fa-solid fa-star" />
+                {avgStarPercent()}
+                {checkNewReview()}
             </div>
-            {avgStarPercent()}
-            {checkNewReview()}
+
             <div>
                 {reviewBtb()}
                 {noReviewsYet()}

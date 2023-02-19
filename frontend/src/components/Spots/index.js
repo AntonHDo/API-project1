@@ -11,7 +11,7 @@ const AllSpots = () => {
     const spotsArray = Object.values(spots)
 
     for (let key in spots) {
-        let avgRate = (Number(spots[key].avgRating) || 0.0).toFixed(1)
+        let avgRate = (Number(spots[key].avgRating) || "New")
         spots[key] = {
             address: spots[key].address,
             city: spots[key].city,
@@ -31,6 +31,8 @@ const AllSpots = () => {
         }
     }
     // console.log("Spots array from spot", spotsArray)
+
+
 
     useEffect(() => {
         const refresh = async () => {
