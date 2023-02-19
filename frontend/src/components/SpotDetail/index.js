@@ -255,7 +255,20 @@ const SpotDetail = () => {
         closeModal()
     }
 
+    const previewImg = () => {
+        return spot.SpotImages && (<div className="preview-image-left">
+            {<img src={(spot.SpotImages[0].url)} alt="Main Preview Image 1" />}
+            <div className="preview-image-right">
+                <img src={spot.SpotImages[1].url} alt="Preview Image 2" />
+                <img src={spot.SpotImages[2].url} alt="Preview Image 3" />
+                <img src={spot.SpotImages[3].url} alt="Preview Image 4" />
+                <img src={spot.SpotImages[4].url} alt="Preview Image 5" />
+            </div>
 
+
+        </div>
+        )
+    }
 
     return spot && (
         <div className="spotsDetailPage">
@@ -264,29 +277,17 @@ const SpotDetail = () => {
                 {spot.city}, {spot.state}, {spot.country}
             </div>
 
-            {spot?.SpotImages?.map(image => (
+            {/* {spot?.SpotImages?.map(image => (
                 <div className="image-container-testing">
                     <div className="imageTesting">
                         <img className="inSideImage" src={image?.url} />
                     </div>
                 </div>
-            ))}
+            ))} */}
             <div className="previewImg">
 
+                {previewImg()}
 
-                <div className="preview-image-left">
-
-                    {/* <img src={!!((spot.SpotImages[0] || {}).url)} alt="Main Preview Image 1" />
-
-                    <div className="preview-image-right">
-                        <img src={spot.SpotImages[1]} alt="Preview Image 2" />
-                        <img src={spot.SpotImages[2]} alt="Preview Image 3" />
-                        <img src={spot.SpotImages[3]} alt="Preview Image 4" />
-                        <img src={spot.SpotImages[4]} alt="Preview Image 5" />
-                    </div> */}
-
-
-                </div>
             </div>
             <hr></hr>
             <div className="info-container">
