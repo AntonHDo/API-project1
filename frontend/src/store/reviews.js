@@ -114,7 +114,10 @@ const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
         case REMOVE_REVIEWS:
             const deleteState = { ...state }
-            delete deleteState[action.id];
+            // delete deleteState[action.id];
+            deleteState.user.Reviews = deleteState.user.Reviews.filter(review => {
+                return review.id !== action.id
+            })
             return deleteState
         case LOAD_REVIEWS:
             // const spotReviews = { ...state };

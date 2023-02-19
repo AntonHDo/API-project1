@@ -171,7 +171,7 @@ const CreateSpot = ({ id }) => {
                     <h2>Describe your place to guests</h2>
                     <div className="form-description">Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>
                     <div className="description-container">
-                        <input type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <textarea type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} />
                         {errors['description'] && <div className="form-error">{errors['description']}</div>}
                     </div>
                     <hr></hr>

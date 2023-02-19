@@ -53,6 +53,7 @@ const removeSpot = (spotId) => {
 //get all spots
 export const getSpots = () => async dispatch => {
     const response = await fetch(`/api/spots`);
+    console.log("response from spot store:", response)
     if (response.ok) {
         const spot = await response.json()
         dispatch(loadSpots(spot))
