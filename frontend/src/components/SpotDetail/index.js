@@ -106,7 +106,6 @@ const SpotDetail = () => {
                 <div></div>
             )
         } else {
-            // console.log("review from reviews", reviews.Reviews)
             let name = spot.name
             return Reviews?.map((review) => {
                 let starRating
@@ -169,6 +168,8 @@ const SpotDetail = () => {
                                         modalComponent={
                                             <>
                                                 <form onSubmit={handleSubmitForDelete}>
+                                                    <h2>Confirm Delete</h2>
+                                                    <p>Are you sure you want to delete this review?</p>
                                                     <button type="submit" onClick={handleSubmitForDelete}>Yes (Delete Review)</button>
                                                     <button type="submit" onClick={closeModal}>No (Keep Review)</button>
                                                 </form>
@@ -209,7 +210,7 @@ const SpotDetail = () => {
     })
 
 
-    const compareRev = reviews.Reviews?.find(review => review?.userId === user.id)
+    const compareRev = reviews?.Reviews?.find(review => review?.userId === user?.id)
 
     const reviewBtb = () => {
         if (user && user.id !== spot.ownerId && user.id !== compareRev?.userId) {

@@ -15,6 +15,27 @@ const CurrentUserSpot = () => {
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots.allSpots)
 
+    for (let key in spots) {
+        let avgRate = (Number(spots[key].avgRating) || "New")
+        spots[key] = {
+            address: spots[key].address,
+            city: spots[key].city,
+            country: spots[key].country,
+            createdAt: spots[key].createdAt,
+            description: spots[key].description,
+            id: spots[key].id,
+            lat: spots[key].lat,
+            lng: spots[key].lng,
+            name: spots[key].name,
+            ownerId: spots[key].ownerId,
+            previewImage: spots[key].previewImage,
+            price: spots[key].price,
+            state: spots[key].state,
+            updatedAt: spots[key].updatedAt,
+            avgRating: avgRate
+        }
+    }
+
     const { closeModal } = useModal();
 
 
@@ -38,6 +59,8 @@ const CurrentUserSpot = () => {
         closeModal()
         history.push('/')
     }
+
+
 
     return CurrentUserSpot && (
         <div className="spotsPage">
