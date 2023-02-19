@@ -49,8 +49,8 @@ const EditSpot = () => {
         if (description.length < 30) errors['description'] = 'Description needs a minimum of 30 characters'
         if (!name) errors['name'] = 'Name is required'
         if (!price) errors['price'] = 'Price is required'
-        if (!previewImage || previewImage === '') errors['previewImage'] = 'Preview image is required'
-        if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) errors['previewImage'] = 'Preview image URL must end in .png, .jpg, or .jpeg'
+        // if (!previewImage || previewImage === '') errors['previewImage'] = 'Preview image is required'
+        // if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) errors['previewImage'] = 'Preview image URL must end in .png, .jpg, or .jpeg'
         // if (!imageURL.includes('.png')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
         // if (!imageURL.includes('.jpg')) errors['imageURL'] = 'Image URL must end in .png, .jpg, or .jpeg'
@@ -140,7 +140,7 @@ const EditSpot = () => {
                 <h2>Describe your place to guests</h2>
                 <div>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood</div>
                 <div className="description-container">
-                    <input type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <textarea type="text" placeholder="Please write at least 30 characters" value={description} onChange={(e) => setDescription(e.target.value)} />
                     {errors['description'] && <div>{errors['description']}</div>}
                 </div>
                 <hr></hr>
@@ -158,13 +158,13 @@ const EditSpot = () => {
                     <span><b>$ </b><input type="number" placeholder="Price per night (USD)" value={price} onChange={(e) => setPrice(e.target.value)} /></span>
                     {errors['price'] && <div>{errors['price']}</div>}
                 </div>
-                <hr></hr>
+                {/* <hr></hr>
                 <h2>Liven up your spot with photos</h2>
-                <div>Submit a link to at least one photo to publish your spot</div>
-                <div className="prev-img-container">
+                <div>Submit a link to at least one photo to publish your spot</div> */}
+                {/* <div className="prev-img-container">
                     <input type="text" placeholder="Preview Image URL" value={previewImage} onChange={(e) => setPreviewImage(e.target.value)} />
                     {errors['previewImage'] && <div>{errors['previewImage']}</div>}
-                </div>
+                </div> */}
                 {/* <div className="img-container"> */}
                 {/* <input type="text" placeholder="Image URL" value={imageURL} onChange={(e) => setImageURL(e.target.value)} />
                     {errors['imageURL'] && <div>{errors['imageURL']}</div>}
@@ -173,7 +173,8 @@ const EditSpot = () => {
                 <input type="text" placeholder="Image URL" value={imageURL3} onChange={(e) => setImageURL3(e.target.value)} />
                 <input type="text" placeholder="Image URL" value={imageURL4} onChange={(e) => setImageURL4(e.target.value)} /> */}
 
-                <hr></hr>
+                <br></br>
+                <br></br>
                 <button className="createSpot" type="submit">Update Spot</button>
             </form>
         </div>

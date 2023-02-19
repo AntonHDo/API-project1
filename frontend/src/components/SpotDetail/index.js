@@ -208,8 +208,11 @@ const SpotDetail = () => {
         await dispatch(getDetailOfSpot)
     })
 
+
+    const compareRev = reviews.Reviews?.find(review => review?.userId === user.id)
+
     const reviewBtb = () => {
-        if (user && user.id !== spot.ownerId) {
+        if (user && user.id !== spot.ownerId && user.id !== compareRev?.userId) {
             return (
                 <div>
                     <OpenModalButton
