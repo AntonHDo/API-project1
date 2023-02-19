@@ -26,6 +26,8 @@ const SpotDetail = () => {
         const refresh = async () => {
 
             await dispatch(getDetailOfSpot(spotId))
+            //   const getDetails = await dispatch(getDetailOfSpot(spotId))
+            //   console.log("getdetails from spot details", getDetails)
             await dispatch(getReviews(spotId))
         }
         refresh()
@@ -259,10 +261,9 @@ const SpotDetail = () => {
         return spot.SpotImages && (<div className="preview-image-left">
             {<img src={(spot.SpotImages[0].url)} alt="Main Preview Image 1" />}
             <div className="preview-image-right">
-                <img src={spot.SpotImages[1].url} alt="Preview Image 2" />
-                <img src={spot.SpotImages[2].url} alt="Preview Image 3" />
-                <img src={spot.SpotImages[3].url} alt="Preview Image 4" />
-                <img src={spot.SpotImages[4].url} alt="Preview Image 5" />
+                {spot.SpotImages.filter((_, index) => (index !== 0)).map((image, index) => (
+                    <img src={image.url} alt={`spot image ${index + 2}`} />
+                ))}
             </div>
 
 
@@ -289,27 +290,28 @@ const SpotDetail = () => {
                 {previewImg()}
 
             </div>
-            <hr></hr>
             <div className="info-container">
-                <h2>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</h2>
-                <div>{spot.description}</div>
-                <div className="price-reserve-container">
-                    <br></br>
-                    <div>
-                        $
-                        {spot?.price}
-                        night
-
-                    </div>
-                    {/* {spot.avgStarRating} · */}
-                    <div>
-                        <div>
-
+                <div className="info-col">
+                    <h2>Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</h2>
+                    <div>{spot.description}</div>
+                </div>
+                <div className="price-reserve-container price-col">
+                    <div className="price-inner">
+                        <div className="price">
+                            $
+                            {spot?.price}
+                            <span>night</span>
+                        </div>
+                        <div className="star-container">
                             <i className="fa-sharp fa-solid fa-star" />
                             {avgStarPercent()}
-                            {checkNewReview()}
+                            <div>
+                                {checkNewReview()}
+                            </div>
                         </div>
                     </div>
+                    {/* {spot.avgStarRating} · */}
+
                     <button className="site-button" onClick={() => alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
             </div>

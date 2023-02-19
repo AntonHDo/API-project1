@@ -33,11 +33,15 @@
     flex-direction: column;
 }
 
-#model-content form ul {
+#modal-content form ul {
     display: flex;
 }
 
-#model-content label {
+#modal-content label {
     display: flex;
     flex-direction: column;
+}
+
+textarea {
+    width: 100%;
 }
