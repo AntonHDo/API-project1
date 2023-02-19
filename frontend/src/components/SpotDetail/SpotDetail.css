@@ -54,6 +54,24 @@
   display: flex;
 }
 
-.star-container>div {
-  margin-left: 5px;
+.star-container>.show-dot::before {
+  content: '·';
+  margin: 6px;
+}
+
+.star-container>.hide-dot {
+  margin-left: 4px;
+}
+
+.star-review-container {
+  display: flex;
+}
+
+.star-review-container>.show-dot::before {
+  content: '·';
+  margin: 6px;
+}
+
+.star-review-container>.hide-dot {
+  margin-left: 4px;
 }
