@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
         })
 
 
-        spotJSON.avgRating = reviews[0].toJSON().avgRating
+        spotJSON.avgRating = reviews[0].toJSON().avgRating.toFixed(1)
 
         spotsArray.push(spotJSON)
     }
@@ -223,7 +223,7 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
 
-        spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating
+        spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating.toFixed(1)
 
         currentUsersSpotsArray.push(spotJSON)
     }
@@ -427,6 +427,11 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
                 ownerId: req.user.id
             }
         })
+
+    // return res.status(500).json({
+    //     "message": "Spot couldn't be found",
+    //     "statusCode": 500
+    // })
 
     if (!spots) {
         return res.status(404).json({
