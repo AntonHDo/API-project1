@@ -47,3 +47,16 @@
 .current-spot-link {
   color: white;
 }
+
+.manageSpotsContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mangeSpotsContainer .spot-city {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border: solid 1px cyan;
+}

@@ -57,10 +57,7 @@ const AllSpots = () => {
                                     <div className="roomData">
                                         <div className="spotLocationContainer">
                                             <h3>{spot?.name}</h3>
-                                            <div className="spot-city">
-                                                {spot?.city}, {spot?.state}
 
-                                            </div>
                                             <div className="price-per-night">
                                                 <h3>
                                                     $
