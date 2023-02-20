@@ -52,7 +52,6 @@ const SpotDetail = () => {
     //         url: null
     //     }
     // }
-    // console.log("check pre img here first", spot?.SpotImages?.length > 0)
     // let nonPrevImgs = spot?.SpotImage?.filter((image) => {
     //     if (image.preview === false) {
     //         return image
@@ -94,12 +93,10 @@ const SpotDetail = () => {
         }
     }
     const showReviews = () => {
-        // console.log(reviews)
         let { Reviews } = reviews
-        console.log("before", Reviews)
         Reviews?.sort((a, b) => {
-            const createdAtDateA = new Date(a.createdAt)
-            const createdAtDateB = new Date(b.createdAt)
+            const createdAtDateA = new Date(a?.createdAt)
+            const createdAtDateB = new Date(b?.createdAt)
             if (createdAtDateA < createdAtDateB) {
                 return 1
             } else if (createdAtDateA > createdAtDateB) {
@@ -109,7 +106,6 @@ const SpotDetail = () => {
             }
 
         })
-        console.log("After", Reviews)
 
 
         // let dayDivider
@@ -119,7 +115,6 @@ const SpotDetail = () => {
         //     const date = (review.updatedAt).split('-')[2].slice(0, 2)
         //     dayDivider = year + "-" + month + "-" + date
         // }
-        // console.log("Reviews updated at here:", dayDivider)
         // Reviews.sort((a, b) => b - a)
 
         if (reviews?.length === 0) {
@@ -276,7 +271,6 @@ const SpotDetail = () => {
 
 
     const rev = reviews?.Reviews?.find((review) => review?.userId === user?.id)
-    // console.log("here is the reviews", rev)
     const handleSubmitForDelete = async (e) => {
         e.preventDefault()
 

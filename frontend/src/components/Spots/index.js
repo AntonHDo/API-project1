@@ -30,7 +30,6 @@ const AllSpots = () => {
             avgRating: avgRate
         }
     }
-    // console.log("Spots array from spot", spotsArray)
 
 
 

@@ -53,7 +53,6 @@ const removeSpot = (spotId) => {
 //get all spots
 export const getSpots = () => async dispatch => {
     const response = await fetch(`/api/spots`);
-    console.log("response from spot store:", response)
     if (response.ok) {
         const spot = await response.json()
         dispatch(loadSpots(spot))
@@ -107,11 +106,11 @@ export const createASpot = (data, image) => async (dispatch) => {
             if (response2.ok) {
                 let oneImage = await response2.json()
                 newSpot.SpotImages.push(oneImage)
-                // console.log("new spot from create a spot", newSpot.SpotImages)
+
             }
         }
 
-        // console.log("new spot from create a spot", image)
+
         dispatch(addSpot(newSpot))
         return newSpot
     }
@@ -145,9 +144,7 @@ export const editASpot = (spot, image, spotId) => async (dispatch) => {
     })
     if (response.ok) {
         const editedSpot = await response.json()
-        console.log("spot from spots store", spot)
-        dispatch(editSpot(spot))
-        // console.log("edited spot from the store:", editedSpot)
+
         return editedSpot
     }
     return response

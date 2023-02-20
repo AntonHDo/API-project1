@@ -54,7 +54,6 @@ const CurrentUserSpot = () => {
     const handleCLick = async (spot) => {
 
 
-        // console.log("spot for handle click", spots.id)
         await dispatch(deleteASpot(spot))
         closeModal()
         history.push('/')

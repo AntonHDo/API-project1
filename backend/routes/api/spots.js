@@ -156,7 +156,6 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     //     }
     // })
 
-    // console.log(currImages[0])
 
     let newImage = await spot.createSpotImage({
         spotId: req.params.spotId,
@@ -172,7 +171,6 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     //         spotId: spot.id
     //     }
     // })
-    // console.log("meweeee", newImage.SpotImage)
 
     return res.json({
         id: newImage.id,
@@ -237,11 +235,9 @@ router.get('/current', requireAuth, async (req, res) => {
         }
     }
 
-    // console.log(currentUsersSpotsArray)
     // spotJSON.previewImage = currentusersSpotImage[0]
 
     // for (let spots of currentUsersSpotsArray) {
-    //     console.log(spots)
     // }
 
     return res.status(200).json({
@@ -298,7 +294,6 @@ router.get('/:spotId', async (req, res) => {
             }
         }
     }
-    // console.log(spotJSON.SpotImages.length)
 
     return res.json(spotJSON)
 })
@@ -559,7 +554,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     //     include: User
     // })
 
-    // console.log("HELLO", totalBookings[0].userId)
 
     // let bookingsList = []
     // if (totalBookings[0].userId !== req.user.id) {

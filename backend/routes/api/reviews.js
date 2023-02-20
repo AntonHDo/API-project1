@@ -172,7 +172,6 @@ router.put('/:reviewId', async (req, res) => {
 router.delete('/:reviewId', requireAuth, async (req, res) => {
     const reviewId = await Review.findByPk(req.params.reviewId)
 
-    // console.log(reviewId)
 
     if (!reviewId) {
         return res.status(404).json({

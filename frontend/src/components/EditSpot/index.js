@@ -61,8 +61,6 @@ const EditSpot = () => {
         // // || !imageURL.includes('.jpeg', imageURL.lastIndexOf()))
 
 
-        // console.log("imageURL", imageURL.includes('.png', imageURL.lastIndexOf()))
-        // console.log("errors:", errors['imageURL'])
 
         if (Object.keys(errors).length > 0) {
             setErrors(errors)
