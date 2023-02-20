@@ -284,15 +284,15 @@ const SpotDetail = () => {
     const previewImg = () => {
         return spot.SpotImages && (<div className="preview-image-left">
             {<img src={(spot.SpotImages[0].url)} alt="Main Preview Image 1" />}
+
+
             <div className="preview-image-right">
                 {spot.SpotImages.filter((_, index) => (index !== 0)).map((image, index) => (
                     <img src={image.url} alt={`spot image ${index + 2}`} />
                 ))}
             </div>
 
-
-        </div>
-        )
+        </div>)
     }
 
     return spot && (

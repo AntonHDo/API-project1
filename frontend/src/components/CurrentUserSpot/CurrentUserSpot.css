@@ -54,9 +54,8 @@
   width: 100%;
 }
 
-.mangeSpotsContainer .spot-city {
+.manageSpotsContainer .spot-city {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  border: solid 1px cyan;
 }

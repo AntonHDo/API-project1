@@ -17,7 +17,7 @@ function Navigation({ isLoaded }) {
                 <NavLink className='homeBtn' exact to="/">
                     <div className="site-logo">
                         <img className='demologo' src={logo} />
-                        <div>CareBnb</div>
+                        <div className='site-name'>CareBnb</div>
                     </div>
                 </NavLink>
                 <ul className='nav-bar' >
