@@ -79,7 +79,7 @@ const CurrentUserSpot = () => {
                                 </div>
                                 <div className="roomDetails">
                                     <div className="roomData">
-                                        <div className="spotLocationContainer">
+                                        <div className="spotLocationContainer manageSpotsContainer">
                                             <div className="spot-city">
                                                 {spot?.city}, {spot?.state}
                                                 <span className="starReviewInCurrentSpot">
