@@ -13,20 +13,27 @@
 
 .submit-button-review {
   height: 30px;
-  background-color: #FF385C;
+  /* background-color: #FF385C; */
   width: 100%;
   text-align: center;
-  border: 1px black inset;
+  /* border: 1px black inset; */
 }
 
 .enabled {
   color: white;
+  background: #FF385C;
   padding: 9px;
+  pointer-events: all;
+  width: 100%;
+  cursor: pointer;
 }
 
 .disabled {
-  color: lightgray;
+  color: darkgray;
+  background-color: rgb(243, 243, 243);
   padding: 9px;
+  width: 100%;
+  pointer-events: none;
 }
 
 .stars-container-modal {

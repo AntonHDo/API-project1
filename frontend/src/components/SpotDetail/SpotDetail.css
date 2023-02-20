@@ -98,6 +98,8 @@
 .modalDeleteButton {
   color: white !important;
   background: gray !important;
+  /* padding: .5em 1em; */
+  margin-top: 10px;
 }
 
 .spotsDetailPage {

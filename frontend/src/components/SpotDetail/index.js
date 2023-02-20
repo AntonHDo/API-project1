@@ -204,6 +204,7 @@ const SpotDetail = () => {
                 }
                 return (
                     <>
+                        <br></br>
                         <div>
                             {review.User.firstName}
                             {starRating}
@@ -242,6 +243,7 @@ const SpotDetail = () => {
                             <CreateReviewModal id={spotId} createReview={createReview} />
                         }
                     ></OpenModalButton>
+
                 </div>
             )
         }
@@ -332,7 +334,7 @@ const SpotDetail = () => {
                         </div>
                     </div>
                     {/* {spot.avgStarRating} · */}
-
+                    <br></br>
                     <button className="site-button" onClick={() => alert('Feature Coming Soon...')}>Reserve</button>
                 </div>
             </div>
@@ -344,6 +346,7 @@ const SpotDetail = () => {
             </div>
 
             <div>
+
                 {reviewBtb()}
                 {noReviewsYet()}
             </div>

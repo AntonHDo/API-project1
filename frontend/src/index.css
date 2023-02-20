@@ -388,6 +388,12 @@ h3 {
 }
 
 
-
-
 /* end of spots detail css */
+
+.signup-label {
+  width: 100%;
+}
+
+label {
+  width: 100%;
+}

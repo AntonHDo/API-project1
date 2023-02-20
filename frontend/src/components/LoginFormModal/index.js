@@ -85,7 +85,9 @@ function LoginFormModal() {
                         required
                     />
                 </label>
+                <br></br>
                 <button type="submit" className={loginButtonClassName} disabled={disabled}>Log In</button>
+                <br></br>
                 <Link onClick={handleSubmit2}>Demo User</Link>
             </form>
         </>
