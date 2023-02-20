@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
         })
 
 
-        spotJSON.avgRating = reviews[0].toJSON().avgRating.toFixed(1)
+        spotJSON.avgRating = reviews[0].toJSON().avgRating
 
         spotsArray.push(spotJSON)
     }
@@ -223,7 +223,7 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgRating']]
         })
 
-        spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating.toFixed(1)
+        spotJSON.avgRating = currentUsersReviews[0].toJSON().avgRating
 
         currentUsersSpotsArray.push(spotJSON)
     }
