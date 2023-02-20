@@ -103,7 +103,7 @@ const CreateReviewModal = ({ id, createReview }) => {
           Stars
         </div >
         <div>
-          <button className={btnClassName} type="submit" onClick={handleSubmit} disabled={disableBtn} >Submit Your Review</button>
+          <button className={btnClassName} type="submit" onClick={handleSubmit}  >Submit Your Review</button>
         </div>
       </form >
     </div >
