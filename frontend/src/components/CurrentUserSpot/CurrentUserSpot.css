@@ -24,3 +24,26 @@
 .spotLocationContainer {
   margin-right: 10px
 } */
+
+.updateButton {
+  color: white;
+  background: gray;
+  margin-right: 5px
+}
+
+.update-delete-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.starReviewInCurrentSpot {
+  display: inline-block;
+}
+
+.create-spot-at-current {
+  background: gray;
+}
+
+.current-spot-link {
+  color: white;
+}

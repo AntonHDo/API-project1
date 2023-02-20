@@ -184,13 +184,14 @@ const SpotDetail = () => {
                                 <div key={review.id}>
                                     <OpenModalButton
                                         buttonText={"Delete"}
+
                                         modalComponent={
                                             <>
                                                 <form onSubmit={handleSubmitForDelete}>
-                                                    <h2>Confirm Delete</h2>
+                                                    <h2 className="h2button-delete">Confirm Delete</h2>
                                                     <p>Are you sure you want to delete this review?</p>
-                                                    <button type="submit" onClick={handleSubmitForDelete}>Yes (Delete Review)</button>
-                                                    <button type="submit" onClick={closeModal}>No (Keep Review)</button>
+                                                    <button className="yes-please-delete" type="submit" onClick={handleSubmitForDelete}>Yes (Delete Review)</button>
+                                                    <button className="no-do-not-delete" type="submit" onClick={closeModal}>No (Keep Review)</button>
                                                 </form>
                                             </>
                                         }

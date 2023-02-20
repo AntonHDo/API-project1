@@ -5,6 +5,7 @@ import { useModal } from "../../context/Modal";
 import { postAReview } from "../../store/reviews";
 import { getDetailOfSpot } from "../../store/spots";
 import { getCurrentReviews } from "../../store/reviews";
+import './CreateReviewModal.css'
 
 const CreateReviewModal = ({ id, createReview }) => {
   const user = useSelector((state) => state.session.user)
@@ -88,22 +89,22 @@ const CreateReviewModal = ({ id, createReview }) => {
   }
 
   return (
-    <div class="review-modal">
-      <form onSubmit={handleSubmit}>
+    <div className="review-modal">
+      <form class="review-container-modal" onSubmit={handleSubmit}>
         <h2>How was your stay {user?.firstName}?</h2>
-        <div>
-          <textarea type='text' placeholder="Leave your review here..." value={review} onChange={(e) => setReview(e.target.value)} />
+        <div className="textarea-display">
+          <textarea className="inputOfTextarea" cols="200" type='text' placeholder="Leave your review here..." value={review} onChange={(e) => setReview(e.target.value)} />
         </div>
-        <div>
-          <button onClick={handleStars1} value={stars}><i className="fa-sharp fa-solid fa-star"></i></button>
-          <button onClick={handleStars2} value={stars}><i className="fa-sharp fa-solid fa-star"></i></button>
-          <button onClick={handleStars3} value={stars}><i className="fa-sharp fa-solid fa-star"></i></button>
-          <button onClick={handleStars4} value={stars}><i className="fa-sharp fa-solid fa-star"></i></button>
-          <button onClick={handleStars5} value={stars}><i className="fa-sharp fa-solid fa-star"></i></button>
+        <div className="stars-container-modal">
+          <button onClick={handleStars1} value={stars}><i class="fa-regular fa-star"></i></button>
+          <button onClick={handleStars2} value={stars}><i class="fa-regular fa-star"></i></button>
+          <button onClick={handleStars3} value={stars}><i class="fa-regular fa-star"></i></button>
+          <button onClick={handleStars4} value={stars}><i class="fa-regular fa-star"></i></button>
+          <button onClick={handleStars5} value={stars}><i class="fa-regular fa-star"></i></button>
           Stars
         </div >
-        <div>
-          <button className={btnClassName} type="submit" onClick={handleSubmit}  >Submit Your Review</button>
+        <div className="submit-button-review">
+          <button className={btnClassName} type="submit" onClick={handleSubmit} disabled={disableBtn}  >Submit Your Review</button>
         </div>
       </form >
     </div >
