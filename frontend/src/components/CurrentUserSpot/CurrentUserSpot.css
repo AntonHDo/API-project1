@@ -59,3 +59,23 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.confirm-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+div.confirm-buttons button {
+  border-radius: 0;
+}
+
+.confirm-buttons button:last-child {
+  background: var(--grey);
+}
+
+.confirm-buttons button:last-child:hover {
+  background: #2c2c2c;
+}

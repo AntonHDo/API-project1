@@ -106,10 +106,12 @@ const CurrentUserSpot = () => {
                                         <>
                                             <h2>Confirm Delete</h2>
                                             <p>Are you sure you want to remove this spot from the listings?</p>
-                                            <button onClick={(e) => handleCLick(spot?.id)}>
-                                                Yes
-                                            </button>
-                                            <button onClick={closeModal}>No</button>
+                                            <div className="confirm-buttons">
+                                                <button className="site-button" onClick={(e) => handleCLick(spot?.id)}>
+                                                    Yes
+                                                </button>
+                                                <button className="site-button" onClick={closeModal}>No</button>
+                                            </div>
                                         </>
                                     }
                                 />

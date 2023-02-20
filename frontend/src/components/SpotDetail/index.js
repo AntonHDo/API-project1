@@ -98,9 +98,11 @@ const SpotDetail = () => {
         let { Reviews } = reviews
         console.log("before", Reviews)
         Reviews?.sort((a, b) => {
-            if (a.createdAt < b.createdAt) {
+            const createdAtDateA = new Date(a.createdAt)
+            const createdAtDateB = new Date(b.createdAt)
+            if (createdAtDateA < createdAtDateB) {
                 return 1
-            } else if (a.createdAt > b.createdA) {
+            } else if (createdAtDateA > createdAtDateB) {
                 return -1
             } else {
                 return 0
