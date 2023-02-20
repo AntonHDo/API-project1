@@ -27,8 +27,7 @@ const SpotDetail = () => {
         const refresh = async () => {
 
             await dispatch(getDetailOfSpot(spotId))
-            //   const getDetails = await dispatch(getDetailOfSpot(spotId))
-            //   console.log("getdetails from spot details", getDetails)
+
             await dispatch(getReviews(spotId))
         }
         refresh()
@@ -97,9 +96,29 @@ const SpotDetail = () => {
     const showReviews = () => {
         // console.log(reviews)
         let { Reviews } = reviews
-        Reviews = Reviews?.sort((a, b) => new Date(a.createdAt).getMilliseconds() - new Date(b.createdAt).getMilliseconds())
-        console.log("Reviews from reviews:", Reviews)
+        console.log("before", Reviews)
+        Reviews?.sort((a, b) => {
+            if (a.createdAt < b.createdAt) {
+                return 1
+            } else if (a.createdAt > b.createdA) {
+                return -1
+            } else {
+                return 0
+            }
 
+        })
+        console.log("After", Reviews)
+
+
+        // let dayDivider
+        // for (let review of Reviews) {
+        //     const year = (review.updatedAt).split('-')[0]
+        //     const month = (review.updatedAt).split('-')[1]
+        //     const date = (review.updatedAt).split('-')[2].slice(0, 2)
+        //     dayDivider = year + "-" + month + "-" + date
+        // }
+        // console.log("Reviews updated at here:", dayDivider)
+        // Reviews.sort((a, b) => b - a)
 
         if (reviews?.length === 0) {
             return (
@@ -247,14 +266,7 @@ const SpotDetail = () => {
         }
     }
 
-    // useEffect(() => {
-    //     const refresh = async () => {
 
-    //         await dispatch(getDetailOfSpot(spotId))
-    //         await dispatch(getReviews(spotId))
-    //     }
-    //     refresh()
-    // }, [dispatch, spotId])
 
 
 
